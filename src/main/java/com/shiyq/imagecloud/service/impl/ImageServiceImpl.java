@@ -72,6 +72,8 @@ public class ImageServiceImpl extends ServiceImpl<ImageMapper, Image> implements
      */
     @Override
     public ImageDTO uploadImage(UploadDataVO uploadDataVO, MultipartFile file) throws IOException {
+        // TODO 提出文件上传工具方法
+        // TODO 记录次级路径
         // 用户上传路径
         String userUploadPath =
                 uploadFolder + String.format("%06d", uploadDataVO.getUserId()) + "/" + uploadDataVO.getSecondaryPath();
@@ -152,6 +154,7 @@ public class ImageServiceImpl extends ServiceImpl<ImageMapper, Image> implements
      */
     @Override
     public ImageDTO uploadWebImage(UploadDataVO uploadDataVO) throws IOException {
+        // TODO 将网络图像大小也返回给前端？
         // 用户上传路径
         String userUploadPath =
                 uploadFolder + String.format("%06d", uploadDataVO.getUserId()) + "/" + uploadDataVO.getSecondaryPath();
@@ -247,6 +250,7 @@ public class ImageServiceImpl extends ServiceImpl<ImageMapper, Image> implements
         return imageMapper.restoreBySql(sql) > 0;
     }
 
+    // TODO 定时任务，物理删除图像
 
 
     /**

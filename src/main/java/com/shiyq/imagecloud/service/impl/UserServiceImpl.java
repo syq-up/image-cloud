@@ -5,7 +5,7 @@ import com.shiyq.imagecloud.convert.UserConvert;
 import com.shiyq.imagecloud.entity.DO.Setting;
 import com.shiyq.imagecloud.entity.DO.User;
 import com.shiyq.imagecloud.entity.DO.UserInfo;
-import com.shiyq.imagecloud.entity.DTO.UserDTO;
+import com.shiyq.imagecloud.entity.DTO.UserTokenDTO;
 import com.shiyq.imagecloud.entity.VO.UserVO;
 import com.shiyq.imagecloud.mapper.SettingMapper;
 import com.shiyq.imagecloud.mapper.UserInfoMapper;
@@ -78,16 +78,19 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
      * @return 成功返回用户信息，失败返回null
      */
     @Override
-    public UserDTO signIn(UserVO userVO) {
+    public UserTokenDTO signIn(UserVO userVO) {
+        // TODO 查库前是否进行再一次的数据校验
         // 设置检索条件（邮箱登录或id登录）
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("password", userVO.getPassword());
+        // 包含”@“，认为是邮箱登录，否则为id登录
         if (userVO.getUsername().contains("@"))
             queryWrapper.eq("username", userVO.getUsername());
         else
             queryWrapper.eq("id", Long.valueOf(userVO.getUsername()));
         // 查询数据库
         User user = userMapper.selectOne(queryWrapper);
+        // 未检索到则返回null，否则生成token返回前端
         return user == null ? null : UserConvert.INSTANCE.userDOToDTO(user);
     }
 
@@ -98,10 +101,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
      */
     @Override
     @Transactional
-    public UserDTO signup(UserVO userVO) {
+    public UserTokenDTO signup(UserVO userVO) {
+        // TODO 验证码核验后删除key
         // 检索redis，验证邮箱验证码
         String code = stringRedisTemplate.opsForValue().get(userVO.getUsername());
-        System.out.println(code);
+        // 检索不到key或验证码错误，均返回空
         if (code == null || !code.equals(userVO.getCode()))
             return null;
         User user = UserConvert.INSTANCE.userVOtoDO(userVO);
@@ -109,8 +113,16 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         userMapper.insert(user);
         userInfoMapper.insert(new UserInfo(user.getId()));
         settingMapper.insert(new Setting(user.getId()));
-
+        // 3张表均插入成功后生成token返回
         return UserConvert.INSTANCE.userDOToDTO(user);
+    }
+
+    /**
+     * 检查用户名（邮箱地址）是否已存在
+     */
+    @Override
+    public boolean checkSameUsername(String username) {
+        return userMapper.checkSameUsername(username);
     }
 
     /**
@@ -122,14 +134,17 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     public boolean sendEmailVerificationCode(String emailTo) {
         // 生成验证码（后6位为验证码）
         String code = String.valueOf(new Date().getTime()).substring(7);
-        // 存入redis
-        stringRedisTemplate.opsForValue().set(emailTo, code, 600, TimeUnit.SECONDS);
+        // 存入redis，10分钟后失效
+        stringRedisTemplate.opsForValue().set(emailTo, code, 10, TimeUnit.MINUTES);
+        // TODO 邮件发送，提出工具方法
+        // TODO 定义邮件样式
+        // TODO 邮件是否需要发送从主进程分离出来，异步发送？
         // 发送
         SimpleMailMessage msg = new SimpleMailMessage();
         msg.setFrom(emailForm);
         msg.setTo(emailTo);
         msg.setSubject("【Image Cloud】Email Address Signup Verification");
-        msg.setText("Hi, welcome to Image Cloud. Your signup verification is \""+code+"\", " +
+        msg.setText("Hi, welcome to Image Cloud. Your signup verification is  \""+code+"\" , " +
                 "And it is valid for 10 minutes.");
         mailSender.send(msg);
 

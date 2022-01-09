@@ -27,6 +27,7 @@ public class User implements Serializable {
     /**
      * 主键id
      */
+    // TODO id生成策略不太合适，想找一种类似于雪花算法，但较短的数字id，
     @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
 

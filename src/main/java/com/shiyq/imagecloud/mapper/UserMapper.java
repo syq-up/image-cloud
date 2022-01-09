@@ -15,4 +15,9 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface UserMapper extends BaseMapper<User> {
 
+    /**
+     * 检查用户名（邮箱地址）是否已存在
+     */
+    boolean checkSameUsername(String username);
+
 }

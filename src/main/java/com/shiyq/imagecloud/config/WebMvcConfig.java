@@ -1,11 +1,13 @@
 package com.shiyq.imagecloud.config;
 
+import com.shiyq.imagecloud.interceptor.JWTInterceptor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.servlet.MultipartConfigFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.util.unit.DataSize;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -36,6 +38,16 @@ public class WebMvcConfig implements WebMvcConfigurer {
                 .allowedMethods("POST", "GET", "PUT", "OPTIONS", "DELETE")
                 .maxAge(3600) //跨域允许时间
                 .allowCredentials(true); //是否允许证书 不再默认开启
+    }
+
+    /**
+     * 配置JWT拦截器
+     */
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(new JWTInterceptor())
+                .addPathPatterns("/**")
+                .excludePathPatterns("/user/**");
     }
 
     /**
