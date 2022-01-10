@@ -20,6 +20,11 @@ public interface UserInfoMapper extends BaseMapper<UserInfo> {
      * @param increase 追加值
      * @return 是否成功
      */
-    boolean updateStoredSizeByIncrease(long userId, long increase);
+    boolean updateStoredSizeByIncrease(int userId, long increase);
+
+    /**
+     * 更新已创建次级路径列表，在原值上追加新创建路径值
+     */
+    boolean updateSecondaryPathByNewPath(int userId, String newPath);
 
 }

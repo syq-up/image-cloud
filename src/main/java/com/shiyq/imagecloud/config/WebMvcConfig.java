@@ -1,6 +1,6 @@
 package com.shiyq.imagecloud.config;
 
-import com.shiyq.imagecloud.interceptor.JWTInterceptor;
+import com.shiyq.imagecloud.interceptor.LoginInterceptor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.servlet.MultipartConfigFactory;
 import org.springframework.context.annotation.Bean;
@@ -41,13 +41,15 @@ public class WebMvcConfig implements WebMvcConfigurer {
     }
 
     /**
-     * 配置JWT拦截器
+     * 配置JWT登录拦截器
      */
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(new JWTInterceptor())
+        registry.addInterceptor(new LoginInterceptor())
                 .addPathPatterns("/**")
-                .excludePathPatterns("/user/**");
+                .excludePathPatterns("/user/**")    // 登录、注册等不拦截
+                .excludePathPatterns("/images/**")  // 访问上传的静态图像不拦截
+        ;
     }
 
     /**

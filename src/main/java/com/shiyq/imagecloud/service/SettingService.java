@@ -17,10 +17,8 @@ public interface SettingService extends IService<Setting> {
 
     /**
      * 获取用户设置
-     * @param userId 用户id
-     * @return 用户设置
      */
-    SettingDTO getSettingByUserId(long userId);
+    SettingDTO getSettingByUserId();
 
     /**
      * 更新设置

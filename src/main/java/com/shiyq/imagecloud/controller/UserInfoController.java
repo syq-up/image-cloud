@@ -6,6 +6,8 @@ import com.shiyq.imagecloud.service.UserInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * <p>
  *  前端控制器
@@ -27,22 +29,10 @@ public class UserInfoController {
 
     /**
      * 获取用户信息
-     * @param id 用户id
-     * @return 返回结果
      */
-    @GetMapping("/getUserInfo/{id}")
-    public XhrResult getUserInfo(@PathVariable long id) {
-        return XhrResult.success(userInfoService.getUserInfo(id));
-    }
-
-    /**
-     * 更新次级路径信息
-     * @param secondaryPathVO 新的次级路径信息
-     * @return 返回结果
-     */
-    @PostMapping("/updateSecondaryPath")
-    public XhrResult updateSecondaryPath(@RequestBody SecondaryPathVO secondaryPathVO) {
-        return XhrResult.success(userInfoService.updateUserInfo(secondaryPathVO));
+    @GetMapping("/getUserInfo")
+    public XhrResult getUserInfo() {
+        return XhrResult.success(userInfoService.getUserInfo());
     }
 
 }

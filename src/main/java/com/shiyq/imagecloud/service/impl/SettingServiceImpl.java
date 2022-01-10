@@ -3,6 +3,7 @@ package com.shiyq.imagecloud.service.impl;
 import com.shiyq.imagecloud.convert.SettingConvert;
 import com.shiyq.imagecloud.entity.DO.Setting;
 import com.shiyq.imagecloud.entity.DTO.SettingDTO;
+import com.shiyq.imagecloud.entity.DTO.UserContext;
 import com.shiyq.imagecloud.entity.VO.SettingVO;
 import com.shiyq.imagecloud.mapper.SettingMapper;
 import com.shiyq.imagecloud.service.SettingService;
@@ -30,12 +31,10 @@ public class SettingServiceImpl extends ServiceImpl<SettingMapper, Setting> impl
 
     /**
      * 获取用户设置
-     * @param userId 用户id
-     * @return 用户设置
      */
     @Override
-    public SettingDTO getSettingByUserId(long userId) {
-        return SettingConvert.INSTANCE.settingToSettingDTO(settingMapper.selectById(userId));
+    public SettingDTO getSettingByUserId() {
+        return SettingConvert.INSTANCE.settingToSettingDTO(settingMapper.selectById(UserContext.getCurrentUserId()));
     }
 
     /**

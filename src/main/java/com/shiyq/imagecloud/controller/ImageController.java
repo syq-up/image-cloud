@@ -59,24 +59,22 @@ public class ImageController {
 
     /**
      * 查询【图像列表】 默认以时间倒序获取
-     * @param userId 用户id
      * @param pageNum 页数
      * @return 请求结果
      */
-    @GetMapping("/getImageList/{userId}/{pageNum}")
-    public XhrResult getImageListByPageNum(@PathVariable long userId, @PathVariable long pageNum) {
-        return XhrResult.success(imageService.getImageList(userId, pageNum));
+    @GetMapping("/getImageList/{pageNum}")
+    public XhrResult getImageListByPageNum(@PathVariable long pageNum) {
+        return XhrResult.success(imageService.getImageList(pageNum));
     }
 
     /**
      * 查询【回收站列表】 默认以时间倒序获取
-     * @param userId 用户id
      * @param pageNum 页数
      * @return 请求结果
      */
-    @GetMapping("/getRecycleList/{userId}/{pageNum}")
-    public XhrResult getRecycleListByPageNum(@PathVariable long userId, @PathVariable long pageNum) {
-        return XhrResult.success(imageService.getRecycleList(userId, pageNum));
+    @GetMapping("/getRecycleList/{pageNum}")
+    public XhrResult getRecycleListByPageNum(@PathVariable long pageNum) {
+        return XhrResult.success(imageService.getRecycleList(pageNum));
     }
 
     /**

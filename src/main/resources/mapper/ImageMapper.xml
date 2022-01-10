@@ -2,4 +2,19 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.shiyq.imagecloud.mapper.ImageMapper">
 
+    <select id="getRecycleListByIdAndPageNum" resultType="com.shiyq.imagecloud.entity.DO.Image">
+        SELECT * FROM `image`
+        WHERE `deleted`=1 AND `user_id`=#{userId}
+        ORDER BY `create_time` DESC
+        LIMIT #{limit} OFFSET #{offset}
+    </select>
+
+    <select id="getTotalRecycle" resultType="long">
+        SELECT COUNT(*) FROM `image` WHERE `deleted` = 1 AND `user_id` = #{userId};
+    </select>
+
+    <update id="restoreById">
+        UPDATE `image`  SET `deleted` = 0  WHERE `id` = #{id}
+    </update>
+
 </mapper>

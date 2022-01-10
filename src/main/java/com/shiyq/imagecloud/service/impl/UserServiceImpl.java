@@ -12,6 +12,7 @@ import com.shiyq.imagecloud.mapper.UserInfoMapper;
 import com.shiyq.imagecloud.mapper.UserMapper;
 import com.shiyq.imagecloud.service.UserService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.shiyq.imagecloud.util.FileUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -20,8 +21,6 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.File;
-import java.sql.Time;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
@@ -102,7 +101,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Override
     @Transactional
     public UserTokenDTO signup(UserVO userVO) {
-        // TODO 验证码核验后删除key
         // 检索redis，验证邮箱验证码
         String code = stringRedisTemplate.opsForValue().get(userVO.getUsername());
         // 检索不到key或验证码错误，均返回空
@@ -111,9 +109,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         User user = UserConvert.INSTANCE.userVOtoDO(userVO);
         // 插入用户（事务）
         userMapper.insert(user);
-        userInfoMapper.insert(new UserInfo(user.getId()));
+        userInfoMapper.insert(new UserInfo(user.getId(), "[]"));
         settingMapper.insert(new Setting(user.getId()));
-        // 3张表均插入成功后生成token返回
+        // 3张表均插入成功后，即注册成功，删除redis验证码缓存
+        stringRedisTemplate.delete(userVO.getUsername());
+        // 生成并返回token
         return UserConvert.INSTANCE.userDOToDTO(user);
     }
 

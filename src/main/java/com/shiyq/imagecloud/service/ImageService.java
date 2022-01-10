@@ -47,19 +47,17 @@ public interface ImageService extends IService<Image> {
 
     /**
      * 查询【图像列表】 默认以时间倒序获取
-     * @param userId 用户id
      * @param pageNum 页数
      * @return 图像列表
      */
-    PageDTO getImageList(long userId, long pageNum);
+    PageDTO getImageList(long pageNum);
 
     /**
      * 查询【回收站列表】 默认以时间倒序获取
-     * @param userId 用户id
      * @param pageNum 页数
      * @return 回收站列表
      */
-    PageDTO getRecycleList(long userId, long pageNum);
+    PageDTO getRecycleList(long pageNum);
 
     /**
      * 【单张图像】【回收】

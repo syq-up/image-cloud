@@ -46,8 +46,8 @@ public class UserController {
     @PostMapping("/checkSameUsername")
     public XhrResult checkSameUsername(@RequestBody UserVO userVO) {
         return userService.checkSameUsername(userVO.getUsername())
-                ? XhrResult.success()
-                : XhrResult.error(HttpStatus.CONFLICT, "The current E-mail address is already registered!");
+                ? XhrResult.error(HttpStatus.CONFLICT, "The current E-mail address is already registered!")
+                : XhrResult.success();
     }
 
     @PostMapping("/sendEmailVerificationCode")

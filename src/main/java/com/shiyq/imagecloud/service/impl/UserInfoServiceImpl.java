@@ -2,6 +2,7 @@ package com.shiyq.imagecloud.service.impl;
 
 import com.shiyq.imagecloud.convert.UserInfoConvert;
 import com.shiyq.imagecloud.entity.DO.UserInfo;
+import com.shiyq.imagecloud.entity.DTO.UserContext;
 import com.shiyq.imagecloud.entity.DTO.UserInfoDTO;
 import com.shiyq.imagecloud.entity.DTO.XhrResult;
 import com.shiyq.imagecloud.entity.VO.SecondaryPathVO;
@@ -33,11 +34,9 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> i
 
     /**
      * 获取用户信息
-     * @param id 用户id
-     * @return 返回结果
      */
-    public UserInfoDTO getUserInfo(long id) {
-        return UserInfoConvert.INSTANCE.userInfoDOToDTO(userInfoMapper.selectById(id));
+    public UserInfoDTO getUserInfo() {
+        return UserInfoConvert.INSTANCE.userInfoDOToDTO(userInfoMapper.selectById(UserContext.getCurrentUserId()));
     }
 
     /**

@@ -12,8 +12,8 @@ spring:
 
   # 使用qq邮箱自动放送邮件
   mail:
-    username: xxx@qq.com # 发送方邮箱
-    password: xxx  # 授权码
+    username: 1663956443@qq.com # 发送方邮箱
+    password: hrtkszidpvgxdebc  # 授权码
     host: smtp.qq.com  # qq邮件服务地址
     port: 465 # 端口
     default-encoding: utf-8 # 编码格式
@@ -54,18 +54,16 @@ mybatis-plus:
       insert-strategy: not_empty  # 插入时，字段为空则不插入
       update-strategy: not_empty  # 更新时，字段为空则不更新
 
-# 文件上传地址
+# 外部访问地址（网址、域名或ip地址）
+url: https://imagecloud.shiyq.top
+
+# 文件上传
 file:
   uploadFolder: /home/admin/myProgram/ImageCloud/images/ # 文件上传地址
-  staticAccessPath: /images/** #静态资源对外暴露的访问路径
+  staticAccessPath: /images/** # 上传的静态资源对外暴露的访问路径
+  staticAccessUrlPrefix: ${url}/ # 外部访问上传的静态资源时的前缀（可选项）
 
 # 雪花算法
 snow-flake:
   datacenterId: 1 # 机房id
   workerId: 2 # 机器id
-
-# 网址（域名或ip地址）
-url: https://imagecloud.shiyq.top
-
-# 图像列表的页大小
-pageSize: 25

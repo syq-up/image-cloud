@@ -4,7 +4,6 @@ import lombok.Data;
 
 @Data
 public class SettingVO {
-    private String userId;
     // 布局设置
     private String theme;
     private String themeColor;

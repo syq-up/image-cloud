@@ -17,10 +17,8 @@ public interface UserInfoService extends IService<UserInfo> {
 
     /**
      * 获取用户信息
-     * @param id 用户id
-     * @return 返回结果
      */
-    UserInfoDTO getUserInfo(long id);
+    UserInfoDTO getUserInfo();
 
     /**
      * 更新用户信息：次级路径信息

@@ -55,7 +55,8 @@ public class UserInfo implements Serializable {
     public UserInfo() {
     }
 
-    public UserInfo(Integer userId) {
+    public UserInfo(Integer userId, String secondaryPath) {
         this.userId = userId;
+        this.secondaryPath = secondaryPath;
     }
 }

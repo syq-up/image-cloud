@@ -25,9 +25,9 @@ public class SettingController {
         this.settingService = settingService;
     }
 
-    @GetMapping("/getSetting/{userId}")
-    public XhrResult getSetting(@PathVariable long userId) {
-        return XhrResult.success(settingService.getSettingByUserId(userId));
+    @GetMapping("/getSetting")
+    public XhrResult getSetting() {
+        return XhrResult.success(settingService.getSettingByUserId());
     }
 
     @PostMapping("/updateSetting")

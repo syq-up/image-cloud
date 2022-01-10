@@ -22,7 +22,7 @@ public abstract class UserConvert {
     public void userDOToDTOAfter(User user, @MappingTarget UserTokenDTO userTokenDTO) {
         // 类型转换后，添加token属性信息
         Map<String, String> payload = new HashMap<>();
-        payload.put("id", String.valueOf(user.getId()));
+        payload.put("userId", String.valueOf(user.getId()));
         userTokenDTO.setAccessToken(JWTUtil.getToken(payload));
     }
 

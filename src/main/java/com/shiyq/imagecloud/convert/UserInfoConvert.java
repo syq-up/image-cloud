@@ -2,6 +2,7 @@ package com.shiyq.imagecloud.convert;
 
 import com.alibaba.fastjson.JSON;
 import com.shiyq.imagecloud.entity.DO.UserInfo;
+import com.shiyq.imagecloud.entity.DTO.UserContext;
 import com.shiyq.imagecloud.entity.DTO.UserInfoDTO;
 import com.shiyq.imagecloud.entity.VO.SecondaryPathVO;
 import org.mapstruct.AfterMapping;
@@ -16,6 +17,10 @@ public abstract class UserInfoConvert {
 
     // SecondaryPathVO --> UserInfo
     public abstract UserInfo secondaryPathVOToUserInfoDO(SecondaryPathVO secondaryPathVO);
+    @AfterMapping
+    public void secondaryPathVOToUserInfoDOAfter(SecondaryPathVO secondaryPathVO, @MappingTarget UserInfo userInfo) {
+        userInfo.setUserId(UserContext.getCurrentUserId());
+    }
 
     // UserInfo --> UserInfoDTO
     @Mapping(source = "createTime", target = "createTime", dateFormat = "yyyy-MM-dd HH:mm")

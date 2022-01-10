@@ -3,6 +3,7 @@ package com.shiyq.imagecloud.interceptor;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.shiyq.imagecloud.constant.HttpStatus;
+import com.shiyq.imagecloud.entity.DTO.UserContext;
 import com.shiyq.imagecloud.entity.DTO.XhrResult;
 import com.shiyq.imagecloud.util.JWTUtil;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -13,23 +14,24 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * JWT拦截器，验证请求携带的token
  */
-public class JWTInterceptor implements HandlerInterceptor {
+public class LoginInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         String msg; // 错误信息
         String token = request.getHeader("Authorization");
-        // token，移除前7位”Bearer “
+        // token，前7位”Bearer “
         if (token == null || token.length() <= 7)
-            msg = "Missing token!";
+            msg = "Missing token! Please sign in.";
         else {
             try {
-                JWTUtil.verify(token.substring(7));
+                // 解析出userId，放入登录用户的上下文
+                UserContext.add(JWTUtil.verify(token.substring(7)).getClaim("userId").asString());
                 return true;
             } catch (TokenExpiredException e) {
-                msg = "Token expired!";
+                msg = "Token expired! Please sign in again.";
             } catch (Exception e) {
-                msg = "Bad token!";
+                msg = "Bad token! Please sign in again.";
             }
         }
         // 返回失败信息
@@ -39,4 +41,10 @@ public class JWTInterceptor implements HandlerInterceptor {
         return false;
     }
 
+    @Override
+    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
+        // 请求结束，移除当前用户上下文
+        UserContext.remove();
+        HandlerInterceptor.super.afterCompletion(request, response, handler, ex);
+    }
 }

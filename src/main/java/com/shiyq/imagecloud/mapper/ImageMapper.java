@@ -19,26 +19,19 @@ import java.util.List;
 public interface ImageMapper extends BaseMapper<Image> {
 
     /**
-     * 通过【自定义SQL】查询【回收站列表】（【逻辑删除】的记录）
-     * @param sql 自定义sql
-     * @return 回收站列表
+     * 查询【回收站列表】（【逻辑删除】的记录）
      */
-    @Select({"${sql}"})
-    @ResultType(ArrayList.class)
-    List<Image> getRecycleListBySql(@Param("sql") String sql);
+    List<Image> getRecycleListByIdAndPageNum(int userId, int limit, long offset);
 
     /**
      * 查询回收站记录总数（逻辑删除的记录）
      * @return 记录总数
      */
-    @Select({"SELECT COUNT(*) FROM `image` WHERE `deleted` = 1;"})
-    long getTotalRecycle();
+    long getTotalRecycle(int userId);
 
     /**
      * 恢复逻辑删除的记录
-     * @return 行数
      */
-    @Update({"${sql}"})
-    int restoreBySql(@Param("sql") String sql);
+    boolean restoreById(long id);
 
 }
