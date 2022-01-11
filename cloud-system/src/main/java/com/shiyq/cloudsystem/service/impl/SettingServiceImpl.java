@@ -3,7 +3,6 @@ package com.shiyq.cloudsystem.service.impl;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.shiyq.cloudsystem.convert.SettingConvert;
 import com.shiyq.cloudsystem.entity.DO.Setting;
-import com.shiyq.cloudsystem.entity.DTO.SettingDTO;
 import com.shiyq.cloudsystem.entity.DTO.UserContext;
 import com.shiyq.cloudsystem.entity.VO.SettingVO;
 import com.shiyq.cloudsystem.mapper.SettingMapper;
@@ -33,8 +32,8 @@ public class SettingServiceImpl extends ServiceImpl<SettingMapper, Setting> impl
      * 获取用户设置
      */
     @Override
-    public SettingDTO getSettingByUserId() {
-        return SettingConvert.INSTANCE.settingToSettingDTO(settingMapper.selectById(UserContext.getCurrentUserId()));
+    public SettingVO getSettingByUserId() {
+        return SettingConvert.INSTANCE.settingDO2VO(settingMapper.selectById(UserContext.getCurrentUserId()));
     }
 
     /**
@@ -44,6 +43,6 @@ public class SettingServiceImpl extends ServiceImpl<SettingMapper, Setting> impl
      */
     @Override
     public boolean updateSetting(SettingVO settingVO) {
-        return settingMapper.updateById(SettingConvert.INSTANCE.settingVOToSettingDO(settingVO)) > 0;
+        return settingMapper.updateById(SettingConvert.INSTANCE.settingVO2DO(settingVO)) > 0;
     }
 }

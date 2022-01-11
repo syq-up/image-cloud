@@ -1,9 +1,9 @@
 package com.shiyq.cloudsystem.controller;
 
 import com.shiyq.cloudsystem.constant.HttpStatus;
-import com.shiyq.cloudsystem.entity.DTO.UserTokenDTO;
-import com.shiyq.cloudsystem.entity.DTO.XhrResult;
 import com.shiyq.cloudsystem.entity.VO.UserVO;
+import com.shiyq.cloudsystem.entity.VO.XhrResult;
+import com.shiyq.cloudsystem.entity.VO.UserRequest;
 import com.shiyq.cloudsystem.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -31,31 +31,31 @@ public class UserController {
     }
 
     @PostMapping("/sign-in")
-    public XhrResult signIn(@RequestBody UserVO userVO) {
-        UserTokenDTO userDTO = userService.signIn(userVO);
+    public XhrResult signIn(@RequestBody UserRequest userRequest) {
+        UserVO userDTO = userService.signIn(userRequest);
         return userDTO != null
                 ? XhrResult.success(userDTO)
                 : XhrResult.error(HttpStatus.UNAUTHORIZED, "E-mail address or user id and password are incorrect!");
     }
 
     @PostMapping("/signup")
-    public XhrResult signup(@RequestBody UserVO userVO) {
-        UserTokenDTO userDTO = userService.signup(userVO);
+    public XhrResult signup(@RequestBody UserRequest userRequest) {
+        UserVO userDTO = userService.signup(userRequest);
         return userDTO != null
                 ? XhrResult.success(userDTO)
                 : XhrResult.error(HttpStatus.UNAUTHORIZED, "E-mail verification code error!");
     }
 
     @PostMapping("/checkSameUsername")
-    public XhrResult checkSameUsername(@RequestBody UserVO userVO) {
-        return userService.checkSameUsername(userVO.getUsername())
+    public XhrResult checkSameUsername(@RequestBody UserRequest userRequest) {
+        return userService.checkSameUsername(userRequest.getUsername())
                 ? XhrResult.error(HttpStatus.CONFLICT, "The current E-mail address is already registered!")
                 : XhrResult.success();
     }
 
     @PostMapping("/sendEmailVerificationCode")
-    public XhrResult sendEmailVerificationCode(@RequestBody UserVO userVO) {
-        return userService.sendEmailVerificationCode(userVO.getUsername())
+    public XhrResult sendEmailVerificationCode(@RequestBody UserRequest userRequest) {
+        return userService.sendEmailVerificationCode(userRequest.getUsername())
                 ? XhrResult.success()
                 : XhrResult.error();
     }

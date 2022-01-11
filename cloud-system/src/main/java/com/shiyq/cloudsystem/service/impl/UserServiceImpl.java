@@ -6,8 +6,8 @@ import com.shiyq.cloudsystem.convert.UserConvert;
 import com.shiyq.cloudsystem.entity.DO.Setting;
 import com.shiyq.cloudsystem.entity.DO.User;
 import com.shiyq.cloudsystem.entity.DO.UserInfo;
-import com.shiyq.cloudsystem.entity.DTO.UserTokenDTO;
 import com.shiyq.cloudsystem.entity.VO.UserVO;
+import com.shiyq.cloudsystem.entity.VO.UserRequest;
 import com.shiyq.cloudsystem.mapper.SettingMapper;
 import com.shiyq.cloudsystem.mapper.UserInfoMapper;
 import com.shiyq.cloudsystem.mapper.UserMapper;
@@ -72,48 +72,48 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     /**
      * 用户登录
-     * @param userVO 用户登录验证信息
+     * @param userRequest 用户登录验证信息
      * @return 成功返回用户信息，失败返回null
      */
     @Override
-    public UserTokenDTO signIn(UserVO userVO) {
+    public UserVO signIn(UserRequest userRequest) {
         // TODO 查库前是否进行再一次的数据校验
         // 设置检索条件（邮箱登录或id登录）
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("password", userVO.getPassword());
+        queryWrapper.eq("password", userRequest.getPassword());
         // 包含”@“，认为是邮箱登录，否则为id登录
-        if (userVO.getUsername().contains("@"))
-            queryWrapper.eq("username", userVO.getUsername());
+        if (userRequest.getUsername().contains("@"))
+            queryWrapper.eq("username", userRequest.getUsername());
         else
-            queryWrapper.eq("id", Long.valueOf(userVO.getUsername()));
+            queryWrapper.eq("id", Long.valueOf(userRequest.getUsername()));
         // 查询数据库
         User user = userMapper.selectOne(queryWrapper);
         // 未检索到则返回null，否则生成token返回前端
-        return user == null ? null : UserConvert.INSTANCE.userDOToDTO(user);
+        return user == null ? null : UserConvert.INSTANCE.userDO2VO(user);
     }
 
     /**
      * 用户注册
-     * @param userVO 用户注册信息
+     * @param userRequest 用户注册信息
      * @return 成功返回用户信息，失败返回null
      */
     @Override
     @Transactional
-    public UserTokenDTO signup(UserVO userVO) {
+    public UserVO signup(UserRequest userRequest) {
         // 检索redis，验证邮箱验证码
-        String code = stringRedisTemplate.opsForValue().get(userVO.getUsername());
+        String code = stringRedisTemplate.opsForValue().get(userRequest.getUsername());
         // 检索不到key或验证码错误，均返回空
-        if (code == null || !code.equals(userVO.getCode()))
+        if (code == null || !code.equals(userRequest.getCode()))
             return null;
-        User user = UserConvert.INSTANCE.userVOtoDO(userVO);
+        User user = UserConvert.INSTANCE.userRequest2UserDO(userRequest);
         // 插入用户（事务）
         userMapper.insert(user);
         userInfoMapper.insert(new UserInfo(user.getId(), "[]"));
         settingMapper.insert(new Setting(user.getId()));
         // 3张表均插入成功后，即注册成功，删除redis验证码缓存
-        stringRedisTemplate.delete(userVO.getUsername());
+        stringRedisTemplate.delete(userRequest.getUsername());
         // 生成并返回token
-        return UserConvert.INSTANCE.userDOToDTO(user);
+        return UserConvert.INSTANCE.userDO2VO(user);
     }
 
     /**

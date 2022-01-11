@@ -1,5 +1,9 @@
 package com.shiyq.cloudsystem.entity.DTO;
 
+/**
+ * 当前请求的用户上下文信息
+ * 请求开始时创建，结束时销毁
+ */
 public final class UserContext {
     private static final ThreadLocal<Integer> user = new ThreadLocal<>();
 

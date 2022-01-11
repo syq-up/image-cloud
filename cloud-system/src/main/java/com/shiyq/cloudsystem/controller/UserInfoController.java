@@ -1,6 +1,6 @@
 package com.shiyq.cloudsystem.controller;
 
-import com.shiyq.cloudsystem.entity.DTO.XhrResult;
+import com.shiyq.cloudsystem.entity.VO.XhrResult;
 import com.shiyq.cloudsystem.service.UserInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;

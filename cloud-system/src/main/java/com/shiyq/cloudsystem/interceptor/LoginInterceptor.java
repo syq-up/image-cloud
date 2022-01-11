@@ -4,7 +4,7 @@ import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.shiyq.cloudsystem.constant.HttpStatus;
 import com.shiyq.cloudsystem.entity.DTO.UserContext;
-import com.shiyq.cloudsystem.entity.DTO.XhrResult;
+import com.shiyq.cloudsystem.entity.VO.XhrResult;
 import com.shiyq.cloudsystem.util.JWTUtil;
 import org.springframework.web.servlet.HandlerInterceptor;
 

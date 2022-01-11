@@ -12,8 +12,8 @@ spring:
 
   # 使用qq邮箱自动放送邮件
   mail:
-    username: 1663956443@qq.com # 发送方邮箱
-    password: hrtkszidpvgxdebc  # 授权码
+    username: xxx@qq.com # 发送方邮箱
+    password: xxx  # 授权码
     host: smtp.qq.com  # qq邮件服务地址
     port: 465 # 端口
     default-encoding: utf-8 # 编码格式

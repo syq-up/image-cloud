@@ -1,8 +1,8 @@
 package com.shiyq.cloudsystem.convert;
 
 import com.shiyq.cloudsystem.entity.DO.User;
-import com.shiyq.cloudsystem.entity.DTO.UserTokenDTO;
 import com.shiyq.cloudsystem.entity.VO.UserVO;
+import com.shiyq.cloudsystem.entity.VO.UserRequest;
 import com.shiyq.cloudsystem.util.JWTUtil;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
@@ -16,16 +16,16 @@ import java.util.Map;
 public abstract class UserConvert {
     public static UserConvert INSTANCE = Mappers.getMapper(UserConvert.class);
 
-    // User --> UserTokenDTO
-    public abstract UserTokenDTO userDOToDTO(User user);
+    // UserDO --> UserVO
+    public abstract UserVO userDO2VO(User user);
     @AfterMapping
-    public void userDOToDTOAfter(User user, @MappingTarget UserTokenDTO userTokenDTO) {
+    public void userDO2VOAfter(User user, @MappingTarget UserVO userVO) {
         // 类型转换后，添加token属性信息
         Map<String, String> payload = new HashMap<>();
         payload.put("userId", String.valueOf(user.getId()));
-        userTokenDTO.setAccessToken(JWTUtil.getToken(payload));
+        userVO.setAccessToken(JWTUtil.getToken(payload));
     }
 
     // UserVO --> User
-    public abstract User userVOtoDO(UserVO userVO);
+    public abstract User userRequest2UserDO(UserRequest userRequest);
 }

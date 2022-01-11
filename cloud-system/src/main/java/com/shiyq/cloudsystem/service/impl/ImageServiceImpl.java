@@ -5,10 +5,10 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.shiyq.cloudsystem.convert.ImageConvert;
 import com.shiyq.cloudsystem.entity.DO.Image;
-import com.shiyq.cloudsystem.entity.DTO.ImageDTO;
-import com.shiyq.cloudsystem.entity.DTO.PageDTO;
+import com.shiyq.cloudsystem.entity.VO.ImageVO;
+import com.shiyq.cloudsystem.entity.VO.PageVO;
 import com.shiyq.cloudsystem.entity.DTO.UserContext;
-import com.shiyq.cloudsystem.entity.VO.UploadDataVO;
+import com.shiyq.cloudsystem.entity.VO.UploadRequest;
 import com.shiyq.cloudsystem.mapper.ImageMapper;
 import com.shiyq.cloudsystem.mapper.UserInfoMapper;
 import com.shiyq.cloudsystem.service.ImageService;
@@ -65,17 +65,17 @@ public class ImageServiceImpl extends ServiceImpl<ImageMapper, Image> implements
 
     /**
      * 【单张图像】 上传文件到服务器并写入数据库
-     * @param uploadDataVO {图像存储的次级路径，网络图像链接}
+     * @param uploadRequest {图像存储的次级路径，网络图像链接}
      * @param file 图像
      * @return 图像对象 {id, path, ...}
      * @throws IOException 写文件异常
      */
     @Override
     @Transactional
-    public ImageDTO uploadImage(UploadDataVO uploadDataVO, MultipartFile file) throws IOException {
+    public ImageVO uploadImage(UploadRequest uploadRequest, MultipartFile file) throws IOException {
         // 用户上传路径
         String userUploadPath = uploadFolder + String.format("%06d", UserContext.getCurrentUserId()) + "/";
-        String secondaryPath = uploadDataVO.getSecondaryPath();
+        String secondaryPath = uploadRequest.getSecondaryPath();
         // 新文件路径，则创建，并更新用户细信息（已创建次级路径列表）
         if (FileUtil.createNewPath(userUploadPath, secondaryPath)) {
             userInfoMapper.updateSecondaryPathByNewPath(UserContext.getCurrentUserId(), "\""+secondaryPath+"\"");
@@ -86,9 +86,9 @@ public class ImageServiceImpl extends ServiceImpl<ImageMapper, Image> implements
         // 写新文件，得到完整文件名
         String fullFilename = FileUtil.writeFile(userUploadPath + secondaryPath, String.valueOf(imageId), file);
         // 结合次级路径，得到图像存储名
-        String fieldValue = uploadDataVO.getSecondaryPath().length() == 0
+        String fieldValue = uploadRequest.getSecondaryPath().length() == 0
                 ? fullFilename
-                : uploadDataVO.getSecondaryPath() + "/" + fullFilename;
+                : uploadRequest.getSecondaryPath() + "/" + fullFilename;
 
         // 创建新图像对象，插入数据库
         Image image = new Image(imageId, fieldValue, UserContext.getCurrentUserId());
@@ -97,7 +97,7 @@ public class ImageServiceImpl extends ServiceImpl<ImageMapper, Image> implements
         userInfoMapper.updateStoredSizeByIncrease(UserContext.getCurrentUserId(), file.getSize());
 
         // 拼接网站前缀组成完整的外部访问地址，再返回给前端
-        return ImageConvert.INSTANCE.ImageDOToDTO(
+        return ImageConvert.INSTANCE.ImageDO2VO(
                 image.setPath(imageUrlPrefix + String.format("%06d", UserContext.getCurrentUserId()) + "/" + fieldValue));
     }
 
@@ -108,10 +108,10 @@ public class ImageServiceImpl extends ServiceImpl<ImageMapper, Image> implements
      * @throws IOException 写文件异常
      */
     @Override
-    public List<ImageDTO> uploadImages(UploadDataVO uploadDataVO, MultipartFile[] files) throws IOException {
+    public List<ImageVO> uploadImages(UploadRequest uploadRequest, MultipartFile[] files) throws IOException {
         // 用户上传路径
         String userUploadPath = uploadFolder + String.format("%06d", UserContext.getCurrentUserId())
-                + "/" + uploadDataVO.getSecondaryPath();
+                + "/" + uploadRequest.getSecondaryPath();
         // 创建路径
         File userUploadPathFile = new File(userUploadPath);
         if(!userUploadPathFile.exists()) {
@@ -121,7 +121,7 @@ public class ImageServiceImpl extends ServiceImpl<ImageMapper, Image> implements
         String suffix; // 文件后缀名
         long uploadFileName;   // 文件名（通过雪花算法重命名的文件名）
         String fullUploadFileName;
-        List<ImageDTO> imageList = new ArrayList<>();  // 返回的图像列表
+        List<ImageVO> imageList = new ArrayList<>();  // 返回的图像列表
         Image image = new Image();  // 图像
 
         // 逐一写入新文件，并插入数据库
@@ -132,16 +132,16 @@ public class ImageServiceImpl extends ServiceImpl<ImageMapper, Image> implements
             // 文件重命名
             uploadFileName = snowFlakeUtil.getNextId();
             // 存储到数据库的路径
-            fullUploadFileName = uploadDataVO.getSecondaryPath().length() == 0
+            fullUploadFileName = uploadRequest.getSecondaryPath().length() == 0
                     ? uploadFileName + suffix
-                    : uploadDataVO.getSecondaryPath() + "/" + uploadFileName + suffix;
+                    : uploadRequest.getSecondaryPath() + "/" + uploadFileName + suffix;
             // 写文件
             file.transferTo(new File(userUploadPath + "/" + uploadFileName + suffix));
             image.setId(uploadFileName).setPath(fullUploadFileName).setUserId(UserContext.getCurrentUserId());
             // 插入数据库和返回列表
             userInfoMapper.updateStoredSizeByIncrease(UserContext.getCurrentUserId(), file.getSize());
             imageMapper.insert(image);
-            imageList.add(ImageConvert.INSTANCE.ImageDOToDTO(
+            imageList.add(ImageConvert.INSTANCE.ImageDO2VO(
                     image.setPath(imageUrlPrefix + String.format("%06d", UserContext.getCurrentUserId())
                             + "/" + image.getPath())
             ));
@@ -151,33 +151,33 @@ public class ImageServiceImpl extends ServiceImpl<ImageMapper, Image> implements
 
     /**
      * 【网络图像】上传文件到服务器并写入数据库
-     * @param uploadDataVO {图像存储的次级路径，网络图像链接}
+     * @param uploadRequest {图像存储的次级路径，网络图像链接}
      * @return 图像对象 {id, path, createTime}
      * @throws IOException 写文件异常
      */
     @Override
     @Transactional
-    public ImageDTO uploadWebImage(UploadDataVO uploadDataVO) throws IOException {
+    public ImageVO uploadWebImage(UploadRequest uploadRequest) throws IOException {
         // TODO 将网络图像大小也返回给前端？
         // 用户上传路径
         String userUploadPath = uploadFolder + String.format("%06d", UserContext.getCurrentUserId()) + "/";
-        String secondaryPath = uploadDataVO.getSecondaryPath();
+        String secondaryPath = uploadRequest.getSecondaryPath();
         // 新文件路径，则创建，并更新用户细信息（已创建次级路径列表）
         if (FileUtil.createNewPath(userUploadPath, secondaryPath)) {
             userInfoMapper.updateSecondaryPathByNewPath(UserContext.getCurrentUserId(), "\""+secondaryPath+"\"");
         }
 
         // 获取文件后缀名(eg: ".jpg")
-        String suffix = uploadDataVO.getWebImageUrl().substring(uploadDataVO.getWebImageUrl().lastIndexOf("."));
+        String suffix = uploadRequest.getWebImageUrl().substring(uploadRequest.getWebImageUrl().lastIndexOf("."));
         // 生成图像id，并作为新图像名
         long imageId = snowFlakeUtil.getNextId();
         // 结合次级路径，得到图像存储名
-        String fieldValue = uploadDataVO.getSecondaryPath().length() == 0
+        String fieldValue = uploadRequest.getSecondaryPath().length() == 0
                 ? imageId + suffix
-                : uploadDataVO.getSecondaryPath() + "/" + imageId + suffix;
+                : uploadRequest.getSecondaryPath() + "/" + imageId + suffix;
         // 写新文件
         File uploadFile = new File(userUploadPath + "/" + fieldValue);
-        FileUtils.copyURLToFile(new URL(uploadDataVO.getWebImageUrl()), uploadFile);
+        FileUtils.copyURLToFile(new URL(uploadRequest.getWebImageUrl()), uploadFile);
 
         // 创建新图像对象，插入数据库
         Image image = new Image(imageId, fieldValue, UserContext.getCurrentUserId());
@@ -186,7 +186,7 @@ public class ImageServiceImpl extends ServiceImpl<ImageMapper, Image> implements
         userInfoMapper.updateStoredSizeByIncrease(UserContext.getCurrentUserId(), uploadFile.length());
 
         // 拼接网站前缀组成完整的外部访问地址，再返回给前端
-        return ImageConvert.INSTANCE.ImageDOToDTO(
+        return ImageConvert.INSTANCE.ImageDO2VO(
                 image.setPath(imageUrlPrefix + String.format("%06d", UserContext.getCurrentUserId()) + "/" + fieldValue));
     }
 
@@ -196,7 +196,7 @@ public class ImageServiceImpl extends ServiceImpl<ImageMapper, Image> implements
      * @return 图像列表
      */
     @Override
-    public PageDTO getImageList(long pageNum) {
+    public PageVO getImageList(long pageNum) {
         Page<Image> page = new Page<>(pageNum, 25);
         // 排序-最新上传优先
         QueryWrapper<Image> queryWrapper = new QueryWrapper<>();
@@ -210,7 +210,7 @@ public class ImageServiceImpl extends ServiceImpl<ImageMapper, Image> implements
                         String.format("%06d", UserContext.getCurrentUserId()) + "/" + image.getPath())
         );
 
-        return ImageConvert.INSTANCE.PageToPageDTO(page);
+        return ImageConvert.INSTANCE.page2PageVO(page);
     }
 
     /**
@@ -219,8 +219,8 @@ public class ImageServiceImpl extends ServiceImpl<ImageMapper, Image> implements
      * @return 回收站列表
      */
     @Override
-    public PageDTO getRecycleList(long pageNum) {
-        PageDTO pageDTO = new PageDTO(25, pageNum);
+    public PageVO getRecycleList(long pageNum) {
+        PageVO pageVO = new PageVO(25, pageNum);
         // 根据页数获取回收站列表
         List<Image> recycleList =
                 imageMapper.getRecycleListByIdAndPageNum(UserContext.getCurrentUserId(), 25, (pageNum-1)*25);
@@ -229,10 +229,10 @@ public class ImageServiceImpl extends ServiceImpl<ImageMapper, Image> implements
                 image -> image.setPath(imageUrlPrefix.replace("**", "") +
                         String.format("%06d", UserContext.getCurrentUserId()) + "/" + image.getPath())
         );
-        pageDTO.setRecords(ImageConvert.INSTANCE.ImageDOsToDTOs(recycleList));
+        pageVO.setRecords(ImageConvert.INSTANCE.ImageDOs2VOs(recycleList));
         // 回收站记录总数（逻辑删除的记录总数）
-        pageDTO.setTotal(imageMapper.getTotalRecycle(UserContext.getCurrentUserId()));
-        return pageDTO;
+        pageVO.setTotal(imageMapper.getTotalRecycle(UserContext.getCurrentUserId()));
+        return pageVO;
     }
 
     /**

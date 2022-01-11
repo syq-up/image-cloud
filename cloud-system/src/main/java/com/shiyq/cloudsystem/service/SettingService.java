@@ -2,7 +2,6 @@ package com.shiyq.cloudsystem.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.shiyq.cloudsystem.entity.DO.Setting;
-import com.shiyq.cloudsystem.entity.DTO.SettingDTO;
 import com.shiyq.cloudsystem.entity.VO.SettingVO;
 
 /**
@@ -18,7 +17,7 @@ public interface SettingService extends IService<Setting> {
     /**
      * 获取用户设置
      */
-    SettingDTO getSettingByUserId();
+    SettingVO getSettingByUserId();
 
     /**
      * 更新设置

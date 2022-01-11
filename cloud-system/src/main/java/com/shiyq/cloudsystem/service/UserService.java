@@ -2,8 +2,8 @@ package com.shiyq.cloudsystem.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.shiyq.cloudsystem.entity.DO.User;
-import com.shiyq.cloudsystem.entity.DTO.UserTokenDTO;
 import com.shiyq.cloudsystem.entity.VO.UserVO;
+import com.shiyq.cloudsystem.entity.VO.UserRequest;
 
 /**
  * <p>
@@ -17,17 +17,17 @@ public interface UserService extends IService<User> {
 
     /**
      * 用户登录
-     * @param userVO 用户登录验证信息
+     * @param userRequest 用户登录验证信息
      * @return 成功返回用户信息，失败返回null
      */
-    UserTokenDTO signIn(UserVO userVO);
+    UserVO signIn(UserRequest userRequest);
 
     /**
      * 用户注册
-     * @param userVO 用户注册信息
+     * @param userRequest 用户注册信息
      * @return 成功返回用户信息，失败返回null
      */
-    UserTokenDTO signup(UserVO userVO);
+    UserVO signup(UserRequest userRequest);
 
     /**
      * 检查用户名（邮箱地址）是否已存在

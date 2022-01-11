@@ -1,4 +1,4 @@
-package com.shiyq.cloudsystem.entity.DTO;
+package com.shiyq.cloudsystem.entity.VO;
 
 import com.shiyq.cloudsystem.constant.HttpStatus;
 

@@ -1,7 +1,7 @@
 package com.shiyq.cloudsystem.controller;
 
-import com.shiyq.cloudsystem.entity.DTO.XhrResult;
-import com.shiyq.cloudsystem.entity.VO.UploadDataVO;
+import com.shiyq.cloudsystem.entity.VO.XhrResult;
+import com.shiyq.cloudsystem.entity.VO.UploadRequest;
 import com.shiyq.cloudsystem.service.ImageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -30,14 +30,14 @@ public class ImageController {
 
     /**
      * 【单张图像】上传
-     * @param uploadDataVO {图像存储的次级路径，网络图像链接}
+     * @param uploadRequest {图像存储的次级路径，网络图像链接}
      * @param file 图像文件
      * @return 请求结果
      */
     @PostMapping("/upload")
-    public XhrResult upload(UploadDataVO uploadDataVO, @RequestParam("file") MultipartFile file) {
+    public XhrResult upload(UploadRequest uploadRequest, @RequestParam("file") MultipartFile file) {
         try {
-            return XhrResult.success(imageService.uploadImage(uploadDataVO, file));
+            return XhrResult.success(imageService.uploadImage(uploadRequest, file));
         } catch (IOException e) {
             return XhrResult.error("IO Exception");
         }
@@ -45,13 +45,13 @@ public class ImageController {
 
     /**
      * 【网络图像】上传
-     * @param uploadDataVO {图像存储的次级路径, 网络图像链接}
+     * @param uploadRequest {图像存储的次级路径, 网络图像链接}
      * @return 请求结果
      */
     @PostMapping("/uploadWebImage")
-    public XhrResult uploadWebImage(@RequestBody UploadDataVO uploadDataVO) {
+    public XhrResult uploadWebImage(@RequestBody UploadRequest uploadRequest) {
         try {
-            return XhrResult.success(imageService.uploadWebImage(uploadDataVO));
+            return XhrResult.success(imageService.uploadWebImage(uploadRequest));
         } catch (IOException e) {
             return XhrResult.error("IO Exception");
         }
