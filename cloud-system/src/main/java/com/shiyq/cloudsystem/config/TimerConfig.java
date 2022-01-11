@@ -33,7 +33,7 @@ public class TimerConfig {
     /**
      * 每天03：00执行，对逻辑时间达到最大保留时间的图像进行删除
      */
-    @Scheduled(cron = "0 0 3 * * ? *")
+    @Scheduled(cron = "0 0 3 * * ?")
     public void deleteExpiredImages() {
         // 图像应当被删除的极限时间
         long limitDate = new Date().getTime() - MAX_STAY_TIME;
