@@ -9,6 +9,10 @@
         LIMIT #{limit} OFFSET #{offset}
     </select>
 
+    <select id="getAllRecycleList" resultType="com.shiyq.cloudsystem.entity.DO.Image">
+        SELECT * FROM `image` WHERE `deleted`=1
+    </select>
+
     <select id="getTotalRecycle" resultType="long">
         SELECT COUNT(*) FROM `image` WHERE `deleted` = 1 AND `user_id` = #{userId};
     </select>
@@ -16,5 +20,9 @@
     <update id="restoreById">
         UPDATE `image`  SET `deleted` = 0  WHERE `id` = #{id}
     </update>
+    
+    <delete id="realDeleteById">
+        DELETE FROM `image` WHERE id = #{id};
+    </delete>
 
 </mapper>

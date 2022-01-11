@@ -23,6 +23,11 @@ public interface ImageMapper extends BaseMapper<Image> {
     List<Image> getRecycleListByIdAndPageNum(int userId, int limit, long offset);
 
     /**
+     * 查询回收站所有记录
+     */
+    List<Image> getAllRecycleList();
+
+    /**
      * 查询回收站记录总数（逻辑删除的记录）
      * @return 记录总数
      */
@@ -32,5 +37,10 @@ public interface ImageMapper extends BaseMapper<Image> {
      * 恢复逻辑删除的记录
      */
     boolean restoreById(long id);
+
+    /**
+     * 物理删除图像
+     */
+    boolean realDeleteById(long id);
 
 }
