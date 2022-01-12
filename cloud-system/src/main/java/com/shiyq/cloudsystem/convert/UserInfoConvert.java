@@ -14,7 +14,6 @@ public abstract class UserInfoConvert {
     public static UserInfoConvert INSTANCE = Mappers.getMapper(UserInfoConvert.class);
 
     // UserInfo --> UserInfoDTO
-    @Mapping(source = "createTime", target = "createTime", dateFormat = "yyyy-MM-dd HH:mm")
     @Mapping(source = "updateTime", target = "updateTime", dateFormat = "yyyy-MM-dd HH:mm")
     public abstract UserInfoVO userInfoDO2VO(UserInfo userInfo);
     // 解析json字符串为list
