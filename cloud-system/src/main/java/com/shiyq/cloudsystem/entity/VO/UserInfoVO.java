@@ -10,6 +10,5 @@ import java.util.List;
 public class UserInfoVO {
     private Long storedSize;
     private List<String> secondaryPathList;
-    private String createTime;
     private String updateTime;
 }

@@ -91,7 +91,7 @@ public class ImageServiceImpl extends ServiceImpl<ImageMapper, Image> implements
                 : uploadRequest.getSecondaryPath() + "/" + fullFilename;
 
         // 创建新图像对象，插入数据库
-        Image image = new Image(imageId, fieldValue, UserContext.getCurrentUserId());
+        Image image = new Image(imageId, fieldValue, (int)file.getSize(), UserContext.getCurrentUserId());
         imageMapper.insert(image);
         // 更新用户总存储大小
         userInfoMapper.updateStoredSizeByIncrease(UserContext.getCurrentUserId(), file.getSize());
@@ -180,7 +180,7 @@ public class ImageServiceImpl extends ServiceImpl<ImageMapper, Image> implements
         FileUtils.copyURLToFile(new URL(uploadRequest.getWebImageUrl()), uploadFile);
 
         // 创建新图像对象，插入数据库
-        Image image = new Image(imageId, fieldValue, UserContext.getCurrentUserId());
+        Image image = new Image(imageId, fieldValue, (int)uploadFile.length(), UserContext.getCurrentUserId());
         imageMapper.insert(image);
         // 更新用户总存储大小
         userInfoMapper.updateStoredSizeByIncrease(UserContext.getCurrentUserId(), uploadFile.length());

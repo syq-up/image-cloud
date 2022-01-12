@@ -41,12 +41,6 @@ public class UserInfo implements Serializable {
     private String secondaryPath;
 
     /**
-     * 账号创建时间
-     */
-    @TableField(fill = FieldFill.INSERT)
-    private Date createTime;
-
-    /**
      * 更新时间
      */
     @TableField(fill = FieldFill.INSERT_UPDATE)

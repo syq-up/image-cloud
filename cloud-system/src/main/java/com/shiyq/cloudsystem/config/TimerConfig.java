@@ -2,6 +2,7 @@ package com.shiyq.cloudsystem.config;
 
 import com.shiyq.cloudsystem.entity.DO.Image;
 import com.shiyq.cloudsystem.mapper.ImageMapper;
+import com.shiyq.cloudsystem.mapper.UserInfoMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
@@ -24,10 +25,16 @@ public class TimerConfig {
     private String uploadFolder;
 
     private ImageMapper imageMapper;
+    private UserInfoMapper userInfoMapper;
 
     @Autowired
     public void setImageMapper(ImageMapper imageMapper) {
         this.imageMapper = imageMapper;
+    }
+
+    @Autowired
+    public void setUserInfoMapper(UserInfoMapper userInfoMapper) {
+        this.userInfoMapper = userInfoMapper;
     }
 
     /**
@@ -46,6 +53,8 @@ public class TimerConfig {
                 if (!new File(filePath).delete()) {
                     System.out.println("定时任务-物理删除-失败：图像地址=" + filePath);
                 }
+                // 更新用户的总存储大小
+                userInfoMapper.updateStoredSizeByIncrease(image.getUserId(), image.getSize()*(-1L));
             } else {
                 System.out.println("定时任务-物理删除-失败：图像id=" + image.getId());
             }

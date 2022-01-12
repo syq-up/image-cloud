@@ -35,6 +35,11 @@ public class Image implements Serializable {
     private String path;
 
     /**
+     * 图像大小
+     */
+    private Integer size;
+
+    /**
      * 逻辑删除（0否1是）
      */
     @TableLogic
@@ -61,9 +66,10 @@ public class Image implements Serializable {
     public Image() {
     }
 
-    public Image(Long id, String path, Integer userId) {
+    public Image(Long id, String path, Integer size, Integer userId) {
         this.id = id;
         this.path = path;
+        this.size = size;
         this.userId = userId;
     }
 }
