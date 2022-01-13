@@ -31,6 +31,16 @@ public class UserInfo implements Serializable {
     private Integer userId;
 
     /**
+     * 用户昵称
+     */
+    private String nickname;
+
+    /**
+     * 用户头像地址
+     */
+    private String avatarPath;
+
+    /**
      * 已存储图像总大小（字节）
      */
     private Long storedSize;
@@ -49,8 +59,9 @@ public class UserInfo implements Serializable {
     public UserInfo() {
     }
 
-    public UserInfo(Integer userId, String secondaryPath) {
+    public UserInfo(Integer userId, String nickname, String secondaryPath) {
         this.userId = userId;
+        this.nickname = nickname;
         this.secondaryPath = secondaryPath;
     }
 }

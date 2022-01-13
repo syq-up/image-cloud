@@ -8,7 +8,10 @@ import java.util.List;
  */
 @Data
 public class UserInfoVO {
+    private String username;
+    private String nickname;
+    private String avatarUrl;
     private Long storedSize;
     private List<String> secondaryPathList;
-    private String updateTime;
+    private String createTime;
 }

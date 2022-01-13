@@ -11,7 +11,7 @@
  Target Server Version : 50733
  File Encoding         : 65001
 
- Date: 12/01/2022 10:29:17
+ Date: 12/01/2022 21:48:51
 */
 
 SET NAMES utf8mb4;
@@ -68,6 +68,8 @@ CREATE TABLE `user`  (
 DROP TABLE IF EXISTS `user_info`;
 CREATE TABLE `user_info`  (
   `user_id` int(6) UNSIGNED ZEROFILL NOT NULL COMMENT '用户id（主键）',
+  `nickname` varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' COMMENT '用户昵称',
+  `avatar_path` varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' COMMENT '用户头像路径',
   `stored_size` bigint(20) NOT NULL DEFAULT 0 COMMENT '已存储图像总大小（字节）',
   `secondary_path` json NULL COMMENT '用户创建的所有次级路径，json数组',
   `update_time` datetime NULL DEFAULT NULL COMMENT '更新时间',
