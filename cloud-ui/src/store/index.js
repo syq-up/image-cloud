@@ -17,10 +17,12 @@ export default createStore({
     },
     // 一些全局用户信息
     userInfo: {
-      id: 1,
       username: '',
+      nickname: '',
+      avatarUrl: '',
       storedSize: 0,
       secondaryPathList: [],
+      createTime: '',
     },
     // 查看大图模式
     shade: false,

@@ -74,7 +74,7 @@
 import { onMounted, reactive, computed } from 'vue';
 import { useStore } from 'vuex'
 import server from '@/util/request';
-import '@/assets/css/element.css'
+import '@/assets/css/el-upload.css'
 import PageHeader from '@/components/PageHeader'
 import Image from '@/components/Image'
 

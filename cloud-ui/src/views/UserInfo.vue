@@ -1,13 +1,132 @@
 <template>
   <page-header title="User Info" tip="Your infomations."></page-header>
-	<p>已创建的次级路径：</p>
-	<p v-for="(path, i) in $store.state.userInfo.secondaryPathList" :key="i">{{ i+1 }}. /{{ path }}</p>
+	<div class="info">
+		<div class="avatar">
+			<img :src="userInfo.avatarUrl">
+		</div>
+		<el-descriptions
+			class="margin-top"
+			:column="4"
+			size="large"
+			border
+		>
+			<el-descriptions-item :min-width="100">
+				<template #label>
+					<div class="cell-item">
+						Nickname
+					</div>
+				</template>
+				{{ userInfo.nickname }}
+			</el-descriptions-item>
+			<el-descriptions-item :min-width="100">
+				<template #label>
+					<div class="cell-item">
+						E-mail
+					</div>
+				</template>
+				{{ userInfo.username }}
+			</el-descriptions-item>
+			<el-descriptions-item :min-width="100">
+				<template #label>
+					<div class="cell-item">
+						Stored Num
+					</div>
+				</template>
+				53 张
+			</el-descriptions-item>
+			<el-descriptions-item :min-width="100">
+				<template #label>
+					<div class="cell-item">
+						Stored
+					</div>
+				</template>
+				506.22 MB
+			</el-descriptions-item>
+			<el-descriptions-item :min-width="100">
+				<template #label>
+					<div class="cell-item">
+						CreateTime
+					</div>
+				</template>
+				{{ userInfo.createTime }}
+			</el-descriptions-item>
+		</el-descriptions>
+	</div>
+	<div class="card-list">
+		<div class="card">
+			<div class="card-header">Secondary path</div>
+			<div class="card-body">
+				<el-tree
+					:data="userInfo.secondaryPathList"
+					node-key="id"
+					default-expand-all
+				>
+					<!-- <template #default="{ node, data }">
+						<span class="tree-node">
+							<span>/{{ node.label }}</span>
+							<span>
+								<a @click="alert(data)"> Append </a>
+								<a @click="alert(node, data)"> Delete </a>
+							</span>
+						</span>
+					</template> -->
+					<template #default="{ node }">
+						<span class="tree-node">
+							<span>/{{ node.label }}</span>
+						</span>
+					</template>
+				</el-tree>
+			</div>
+		</div>
+		<div class="card" style="max-height: 500px;">
+			<div class="card-header">Modify information</div>
+			<div class="card-body">
+				<el-tabs v-model="updateForm.form">
+					<el-tab-pane label="Information" name="basicInfo">
+						<div class="form-item">
+							<div class="label">Nickname</div>
+							<el-input v-model="updateForm.nickname" placeholder="Enter a nickname you like." clearable />
+						</div>
+						<div class="form-item">
+							<div></div>
+							<div>
+								<el-button type="primary">Save</el-button>
+								<el-button type="primary">Reset</el-button>
+							</div>
+						</div>
+					</el-tab-pane>
+					<el-tab-pane label="Password" name="changePassword">
+						<div class="form-item">
+							<div class="label">Old Password</div>
+							<el-input v-model="updateForm.oldPassword" placeholder="Please enter the old password." clearable />
+						</div>
+						<div class="form-item">
+							<div class="label">New Password</div>
+							<el-input v-model="updateForm.newPassword" placeholder="Please enter the new password." clearable />
+						</div>
+						<div class="form-item">
+							<div class="label">Confirm Password</div>
+							<el-input v-model="updateForm.confirmPassword" placeholder="Please confirm your password." clearable />
+						</div>
+						<div class="form-item">
+							<div></div>
+							<div>
+								<el-button type="primary">Save</el-button>
+								<el-button type="primary">Reset</el-button>
+							</div>
+						</div>
+					</el-tab-pane>
+				</el-tabs>
+			</div>
+		</div>
+	</div>
 </template>
 
 <script>
-import { onMounted, reactive } from 'vue';
-// import { useStore } from 'vuex'
+import { reactive } from 'vue';
+import { useStore } from 'vuex'
 // import server from '@/util/request';
+import '@/assets/css/el-input-medium.css'
 import PageHeader from '@/components/PageHeader'
 
 export default {
@@ -16,19 +135,115 @@ export default {
     'page-header': PageHeader,
   },
 	setup() {
-		// const store = useStore()
-		onMounted(() => {
-			
-    });
+		const store = useStore()
+
 		const userInfo = reactive({
-			secondaryPathList: [],
+			username: store.state.userInfo.username,
+      nickname: store.state.userInfo.nickname,
+      avatarUrl: store.state.userInfo.avatarUrl,
+      storedSize: store.state.userInfo.storedSize,
+      secondaryPathList: [{id: 0, label: '', children: pathListToTree(store.state.userInfo.secondaryPathList)}],
+      createTime: store.state.userInfo.createTime,
 		})
 
-		return { userInfo }
+		function pathListToTree(pathList) {
+			// 1.记录根位置
+			let tree = []
+			let id = 1
+			pathList.forEach(path => {
+				// 2.待匹配项
+				let pathItemList = path.split('/')
+				// 3.将移动指针重置顶层，确保每次从根检索匹配（必须！！！）
+				let levelList = tree
+				// 4.遍历待询节点
+				for (let label of pathItemList) {
+					// 5.同层同名节点查找匹配
+					let obj = levelList.find(item => item.label == label)
+					// 6.若不存在则建立该节点
+					if (!obj) {
+						obj = { id: id++, label, children: [] }
+						levelList.push(obj)
+						// 7.若当前被增节点是叶子节点，则裁剪该节点子节点属性
+						if (label == pathItemList[pathItemList.length - 1]) {
+							delete obj.children
+						}
+					}
+					// 8.已有则进入下一层，继续寻找
+					levelList = obj.children
+				}
+			})
+			return tree
+		}
+
+		const updateForm = reactive({
+			form: 'basicInfo',
+			nickname: store.state.userInfo.nickname,
+			oldPassword: '',
+			newPassword: '',
+			confirmPassword: '',
+		})
+
+		return { userInfo, updateForm }
 	}
 }
 </script>
 
 <style scoped>
-
+.info {
+	margin: 1.2rem 1rem;
+	display: -webkit-flex;
+	display: flex;
+	align-items: center;
+}
+.avatar {
+	width: 97px;
+	height: 97px;
+	margin-right: 20px;
+}
+.avatar img {
+	width: 100%;
+	height: 100%;
+	border-radius: 10px;
+}
+.card-list {
+	margin: 1rem;
+	display: grid;
+	grid-template-columns: 1fr 2fr;
+	gap: 1rem;
+}
+.card {
+	border: 1px solid #e4e7ed;
+	border-radius: 4px;
+	color: #303133;
+	box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+}
+.card .card-header {
+	padding: 14px 14px 7px;
+	border-bottom: 1px solid #e4e7ed;
+}
+.card .card-body {
+	padding: 10px;
+}
+.tree-node {
+	width: 100%;
+	background-color: #00000005;
+}
+.form-item {
+	margin-bottom: 20px;
+	display: grid;
+	grid-template-columns: 100px auto;
+	gap: 12px;
+	align-items: center;
+}
+#pane-changePassword .form-item {
+	grid-template-columns: 150px auto;
+}
+.form-item .label {
+	justify-self: end;
+}
+.form-item .label::before {
+	content: "*";
+	color: #ff4949;
+	margin-right: 3px;
+}
 </style>

@@ -26,7 +26,7 @@
           <div class="right-menu">
             <el-dropdown trigger="click">
               <div style="cursor: pointer;">
-                <img class="head-img" src="../assets/cat.jpg">
+                <img class="head-img" :src="$store.state.userInfo.avatarUrl">
                 <img style="margin-bottom: 6px;" src="../assets/icon/user_menu/down.svg">
               </div>
               <template #dropdown>
