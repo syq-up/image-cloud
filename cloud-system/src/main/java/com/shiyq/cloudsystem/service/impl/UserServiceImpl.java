@@ -77,7 +77,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
      */
     @Override
     public UserVO signIn(UserRequest userRequest) {
-        // TODO 查库前是否进行再一次的数据校验
         // 设置检索条件（邮箱登录或id登录）
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("password", userRequest.getPassword());
@@ -108,7 +107,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         User user = UserConvert.INSTANCE.userRequest2UserDO(userRequest);
         // 插入用户（事务）
         userMapper.insert(user);
-        userInfoMapper.insert(new UserInfo(user.getId(), "[]"));
+        // 初始昵称为邮箱前缀
+        String nickname = userRequest.getUsername().substring(0, userRequest.getUsername().indexOf("@"));
+        userInfoMapper.insert(new UserInfo(user.getId(), nickname, "[]"));
         settingMapper.insert(new Setting(user.getId()));
         // 3张表均插入成功后，即注册成功，删除redis验证码缓存
         stringRedisTemplate.delete(userRequest.getUsername());
