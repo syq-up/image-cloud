@@ -11,7 +11,7 @@
  Target Server Version : 50733
  File Encoding         : 65001
 
- Date: 12/01/2022 21:48:51
+ Date: 14/01/2022 09:33:49
 */
 
 SET NAMES utf8mb4;
@@ -24,7 +24,7 @@ DROP TABLE IF EXISTS `image`;
 CREATE TABLE `image`  (
   `id` bigint(20) NOT NULL COMMENT '主键id',
   `path` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '图像存储路径',
-  `size` int(11) NULL DEFAULT NULL COMMENT '图像大小',
+  `size` int(11) NOT NULL COMMENT '图像大小',
   `deleted` char(1) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '0' COMMENT '逻辑删除（0否1是）',
   `user_id` int(6) UNSIGNED ZEROFILL NOT NULL COMMENT '用户id',
   `create_time` datetime NOT NULL COMMENT '创建时间',
@@ -70,6 +70,7 @@ CREATE TABLE `user_info`  (
   `user_id` int(6) UNSIGNED ZEROFILL NOT NULL COMMENT '用户id（主键）',
   `nickname` varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' COMMENT '用户昵称',
   `avatar_path` varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' COMMENT '用户头像路径',
+  `stored_num` int(11) NOT NULL DEFAULT 0 COMMENT '已存储图像总数',
   `stored_size` bigint(20) NOT NULL DEFAULT 0 COMMENT '已存储图像总大小（字节）',
   `secondary_path` json NULL COMMENT '用户创建的所有次级路径，json数组',
   `update_time` datetime NULL DEFAULT NULL COMMENT '更新时间',
