@@ -21,7 +21,7 @@ public class JWTUtil {
     public static String getToken(Map<String, String> payload) {
         // token 14天过期
         Calendar instance = Calendar.getInstance();
-        instance.add(Calendar.DATE, 14);
+        instance.add(Calendar.DATE, 7);
         // 创建jwt builder
         JWTCreator.Builder builder = JWT.create();
         // payload

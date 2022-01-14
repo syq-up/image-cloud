@@ -43,4 +43,9 @@ public interface ImageMapper extends BaseMapper<Image> {
      */
     boolean realDeleteById(long id);
 
+    /**
+     * 逻辑删除时，自动填充其他字段
+     */
+    int deleteByIdWithFill(Image image);
+
 }

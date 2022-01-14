@@ -84,7 +84,7 @@ public class ImageController {
      */
     @GetMapping("/deleteImageById/{id}")
     public XhrResult deleteImageById(@PathVariable long id) {
-        return imageService.removeById(id) ? XhrResult.success("OK") : XhrResult.error("失败，请稍后尝试……");
+        return imageService.deleteByIdWithFill(id) ? XhrResult.success("OK") : XhrResult.error("失败，请稍后尝试……");
     }
 
     /**

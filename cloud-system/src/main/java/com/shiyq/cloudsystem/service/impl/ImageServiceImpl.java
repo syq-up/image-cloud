@@ -238,6 +238,14 @@ public class ImageServiceImpl extends ServiceImpl<ImageMapper, Image> implements
     }
 
     /**
+     * 逻辑删除，自动填充更新时间字段
+     */
+    @Override
+    public boolean deleteByIdWithFill(long id) {
+        return imageMapper.deleteByIdWithFill(new Image(id)) >0;
+    }
+
+    /**
      * 【单张图像】【回收】
      * @param id id
      * @return 是否成功

@@ -59,6 +59,11 @@ public interface ImageService extends IService<Image> {
     PageVO getRecycleList(long pageNum);
 
     /**
+     * 逻辑删除，自动填充更新时间字段
+     */
+    boolean deleteByIdWithFill(long id);
+
+    /**
      * 【单张图像】【回收】
      * @param id id
      * @return 是否成功
