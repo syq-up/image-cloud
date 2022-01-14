@@ -103,54 +103,6 @@ public class ImageServiceImpl extends ServiceImpl<ImageMapper, Image> implements
     }
 
     /**
-     * 【多张图像】 上传文件到服务器并写入数据库
-     * @param files 图像数组
-     * @return 图像对象列表 [{id, path, ...}]
-     * @throws IOException 写文件异常
-     */
-    @Override
-    public List<ImageVO> uploadImages(UploadRequest uploadRequest, MultipartFile[] files) throws IOException {
-        // 用户上传路径
-        String userUploadPath = uploadFolder + String.format("%06d", UserContext.getCurrentUserId())
-                + "/" + uploadRequest.getSecondaryPath();
-        // 创建路径
-        File userUploadPathFile = new File(userUploadPath);
-        if(!userUploadPathFile.exists()) {
-            if (!userUploadPathFile.mkdirs()) throw new IOException("创建文件夹失败！");
-        }
-
-        String suffix; // 文件后缀名
-        long uploadFileName;   // 文件名（通过雪花算法重命名的文件名）
-        String fullUploadFileName;
-        List<ImageVO> imageList = new ArrayList<>();  // 返回的图像列表
-        Image image = new Image();  // 图像
-
-        // 逐一写入新文件，并插入数据库
-        for (MultipartFile file : files){
-            // 获取文件后缀名(eg: ".jpg")
-            suffix = Objects.requireNonNull(file.getOriginalFilename())
-                    .substring(file.getOriginalFilename().lastIndexOf("."));
-            // 文件重命名
-            uploadFileName = snowFlakeUtil.getNextId();
-            // 存储到数据库的路径
-            fullUploadFileName = uploadRequest.getSecondaryPath().length() == 0
-                    ? uploadFileName + suffix
-                    : uploadRequest.getSecondaryPath() + "/" + uploadFileName + suffix;
-            // 写文件
-            file.transferTo(new File(userUploadPath + "/" + uploadFileName + suffix));
-            image.setId(uploadFileName).setPath(fullUploadFileName).setUserId(UserContext.getCurrentUserId());
-            // 插入数据库和返回列表
-            userInfoMapper.updateStoredSizeByIncrease(UserContext.getCurrentUserId(), file.getSize());
-            imageMapper.insert(image);
-            imageList.add(ImageConvert.INSTANCE.ImageDO2VO(
-                    image.setPath(imageUrlPrefix + String.format("%06d", UserContext.getCurrentUserId())
-                            + "/" + image.getPath())
-            ));
-        }
-        return imageList;
-    }
-
-    /**
      * 【网络图像】上传文件到服务器并写入数据库
      * @param uploadRequest {图像存储的次级路径，网络图像链接}
      * @return 图像对象 {id, path, createTime}

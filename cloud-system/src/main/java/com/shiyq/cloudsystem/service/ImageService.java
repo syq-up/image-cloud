@@ -29,14 +29,6 @@ public interface ImageService extends IService<Image> {
     ImageVO uploadImage(UploadRequest uploadRequest, MultipartFile file) throws IOException;
 
     /**
-     * 【多张图像】上传文件到服务器并写入数据库
-     * @param files 图像数组
-     * @return 图像对象列表 [{id, path, createTime}]
-     * @throws IOException 写文件异常
-     */
-    List<ImageVO> uploadImages(UploadRequest uploadRequest, MultipartFile[] files) throws IOException;
-
-    /**
      * 【网络图像】上传文件到服务器并写入数据库
      * @param uploadRequest {用户id，图像存储的次级路径，网络图像链接}
      * @return 图像对象 {id, path, createTime}
