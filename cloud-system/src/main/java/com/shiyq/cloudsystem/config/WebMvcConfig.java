@@ -47,7 +47,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(new LoginInterceptor())
                 .addPathPatterns("/**")
-                .excludePathPatterns("/user/**")    // 登录、注册等不拦截
+                .excludePathPatterns("/user/sign-in", "/user/signup",
+                        "/user/checkSameUsername", "/user/sendEmailVerificationCode")    // 登录、注册等不拦截
                 .excludePathPatterns("/images/**")  // 访问上传的静态图像不拦截
         ;
     }

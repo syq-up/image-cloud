@@ -56,4 +56,11 @@ public class User implements Serializable {
     @TableField(fill = FieldFill.INSERT_UPDATE)
     private Date updateTime;
 
+    public User() {
+    }
+
+    public User(Integer id, String password) {
+        this.id = id;
+        this.password = password;
+    }
 }

@@ -23,6 +23,11 @@ public interface UserInfoMapper extends BaseMapper<UserInfo> {
     boolean updateStoredSizeByIncrease(int userId, long increase);
 
     /**
+     * 更新已存储图像总数（在原值上追加）
+     */
+    boolean updateStoredNumByIncrease(int userId, int increase);
+
+    /**
      * 更新已创建次级路径列表，在原值上追加新创建路径值
      */
     boolean updateSecondaryPathByNewPath(int userId, String newPath);

@@ -40,4 +40,10 @@ public interface UserService extends IService<User> {
      * @return 是否成功
      */
     boolean sendEmailVerificationCode(String emailTo);
+
+    /**
+     * 更新用户密码
+     * @return 数据库受影响的行数 0：与原密码相同，1：已修改，-1：原密码错误
+     */
+    int updatePassword(String oldPassword, String newPassword);
 }

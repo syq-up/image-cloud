@@ -32,7 +32,7 @@
 						Stored Num
 					</div>
 				</template>
-				53 张
+				{{ userInfo.storedNum }}
 			</el-descriptions-item>
 			<el-descriptions-item :min-width="100">
 				<template #label>
@@ -40,7 +40,7 @@
 						Stored
 					</div>
 				</template>
-				506.22 MB
+				{{ storedSize }}
 			</el-descriptions-item>
 			<el-descriptions-item :min-width="100">
 				<template #label>
@@ -90,29 +90,35 @@
 						<div class="form-item">
 							<div></div>
 							<div>
-								<el-button type="primary">Save</el-button>
-								<el-button type="primary">Reset</el-button>
+								<el-button type="primary" @click="modifyInfo">Save</el-button>
+								<el-button @click="resetInfoForm">Reset</el-button>
 							</div>
 						</div>
 					</el-tab-pane>
 					<el-tab-pane label="Password" name="changePassword">
 						<div class="form-item">
 							<div class="label">Old Password</div>
-							<el-input v-model="updateForm.oldPassword" placeholder="Please enter the old password." clearable />
+							<el-input v-model="updateForm.oldPassword" type="password" placeholder="Please enter the old password." clearable />
 						</div>
 						<div class="form-item">
 							<div class="label">New Password</div>
-							<el-input v-model="updateForm.newPassword" placeholder="Please enter the new password." clearable />
+							<el-input v-model="updateForm.newPassword" type="password" placeholder="Please enter the new password." clearable />
 						</div>
 						<div class="form-item">
 							<div class="label">Confirm Password</div>
-							<el-input v-model="updateForm.confirmPassword" placeholder="Please confirm your password." clearable />
+							<el-input v-model="updateForm.confirmPassword" type="password" placeholder="Please confirm your password." clearable />
+						</div>
+						<div class="form-item" v-if="updateForm.error">
+							<div></div>
+							<div class="error">
+								{{ updateForm.error }}
+							</div>
 						</div>
 						<div class="form-item">
 							<div></div>
 							<div>
-								<el-button type="primary">Save</el-button>
-								<el-button type="primary">Reset</el-button>
+								<el-button type="primary" @click="modifyPwd">Save</el-button>
+								<el-button @click="resetPwdForm">Reset</el-button>
 							</div>
 						</div>
 					</el-tab-pane>
@@ -123,11 +129,13 @@
 </template>
 
 <script>
-import { reactive } from 'vue';
+import { reactive, computed } from 'vue';
 import { useStore } from 'vuex'
-// import server from '@/util/request';
+import server from '@/util/request';
+import md5 from 'js-md5'
 import '@/assets/css/el-input-medium.css'
 import PageHeader from '@/components/PageHeader'
+import { ElMessage } from 'element-plus';
 
 export default {
   name: 'UserInfo',
@@ -141,10 +149,22 @@ export default {
 			username: store.state.userInfo.username,
       nickname: store.state.userInfo.nickname,
       avatarUrl: store.state.userInfo.avatarUrl,
-      storedSize: store.state.userInfo.storedSize,
+			storedNum: store.state.userInfo.storedNum,
       secondaryPathList: [{id: 0, label: '', children: pathListToTree(store.state.userInfo.secondaryPathList)}],
       createTime: store.state.userInfo.createTime,
 		})
+
+		// 已存储大小
+    const storedSize = computed(()=>{
+      if (store.state.userInfo.storedSize < 1024)
+        return `${store.state.userInfo.storedSize} B`
+      else if (store.state.userInfo.storedSize < 1024*1024)
+        return `${(store.state.userInfo.storedSize / 1024).toFixed(2)} KB`
+      else if (store.state.userInfo.storedSize < 1024*1024*1024)
+        return `${(store.state.userInfo.storedSize / 1024/1024).toFixed(2)} MB`
+      else
+        return `${(store.state.userInfo.storedSize / 1024/1024/1024).toFixed(2)} GB`
+    })
 
 		function pathListToTree(pathList) {
 			// 1.记录根位置
@@ -181,9 +201,49 @@ export default {
 			oldPassword: '',
 			newPassword: '',
 			confirmPassword: '',
+			error: '',
 		})
 
-		return { userInfo, updateForm }
+		function modifyInfo() {
+			let params = {
+				nickname: updateForm.nickname
+			}
+			server.get('/user-info/updateUserInfo', {params}).then(res=>{
+				ElMessage.success(res.msg)
+			})
+
+		}
+		function resetInfoForm() {
+			updateForm.nickname = store.state.userInfo.nickname
+			updateForm.error = ''
+		}
+
+		function modifyPwd() {
+			if (updateForm.newPassword.length <6 || updateForm.newPassword.length >30) {
+				updateForm.error = 'Passwords must be between 6 to 30 characters.'
+				return
+			}
+			if (updateForm.newPassword !== updateForm.confirmPassword) {
+				updateForm.error = 'Two password don\'t match!'
+				return
+			}
+			updateForm.error = ''
+			let params = {
+				oldPassword: md5(updateForm.oldPassword+'#'+updateForm.oldPassword),
+				newPassword: md5(updateForm.newPassword+'#'+updateForm.newPassword),
+			}
+			server.get('/user/updatePassword', {params}).then(res=>{
+				ElMessage.success(res.msg)
+			})
+		}
+		function resetPwdForm() {
+			updateForm.oldPassword = ''
+			updateForm.newPassword = ''
+			updateForm.confirmPassword = ''
+			updateForm.error = ''
+		}
+
+		return { userInfo, storedSize, updateForm, modifyInfo, resetInfoForm, modifyPwd, resetPwdForm }
 	}
 }
 </script>
@@ -245,5 +305,9 @@ export default {
 	content: "*";
 	color: #ff4949;
 	margin-right: 3px;
+}
+.form-item .error {
+	font-size: 14px;
+	color: #f56c6c;
 }
 </style>

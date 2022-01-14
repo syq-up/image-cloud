@@ -94,6 +94,7 @@ public class ImageServiceImpl extends ServiceImpl<ImageMapper, Image> implements
         Image image = new Image(imageId, fieldValue, (int)file.getSize(), UserContext.getCurrentUserId());
         imageMapper.insert(image);
         // 更新用户总存储大小
+        userInfoMapper.updateStoredNumByIncrease(UserContext.getCurrentUserId(), 1);
         userInfoMapper.updateStoredSizeByIncrease(UserContext.getCurrentUserId(), file.getSize());
 
         // 拼接网站前缀组成完整的外部访问地址，再返回给前端
@@ -183,6 +184,7 @@ public class ImageServiceImpl extends ServiceImpl<ImageMapper, Image> implements
         Image image = new Image(imageId, fieldValue, (int)uploadFile.length(), UserContext.getCurrentUserId());
         imageMapper.insert(image);
         // 更新用户总存储大小
+        userInfoMapper.updateStoredNumByIncrease(UserContext.getCurrentUserId(), 1);
         userInfoMapper.updateStoredSizeByIncrease(UserContext.getCurrentUserId(), uploadFile.length());
 
         // 拼接网站前缀组成完整的外部访问地址，再返回给前端

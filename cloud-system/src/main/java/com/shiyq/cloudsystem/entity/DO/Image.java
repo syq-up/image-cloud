@@ -66,6 +66,10 @@ public class Image implements Serializable {
     public Image() {
     }
 
+    public Image(Long id) {
+        this.id = id;
+    }
+
     public Image(Long id, String path, Integer size, Integer userId) {
         this.id = id;
         this.path = path;

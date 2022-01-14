@@ -6,10 +6,7 @@ import com.shiyq.cloudsystem.entity.VO.XhrResult;
 import com.shiyq.cloudsystem.entity.VO.UserRequest;
 import com.shiyq.cloudsystem.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * <p>
@@ -58,6 +55,13 @@ public class UserController {
         return userService.sendEmailVerificationCode(userRequest.getUsername())
                 ? XhrResult.success()
                 : XhrResult.error();
+    }
+
+    @GetMapping("/updatePassword")
+    public XhrResult updatePassword(@RequestParam String oldPassword, @RequestParam String newPassword) {
+        return userService.updatePassword(oldPassword, newPassword) >= 0
+                ? XhrResult.success("Password reset complete.")
+                : XhrResult.error(HttpStatus.NOT_MODIFIED, "Old password wrong！");
     }
 
 }

@@ -11,6 +11,7 @@ public class UserInfoVO {
     private String username;
     private String nickname;
     private String avatarUrl;
+    private Integer storedNum;
     private Long storedSize;
     private List<String> secondaryPathList;
     private String createTime;

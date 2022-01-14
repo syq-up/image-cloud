@@ -41,6 +41,11 @@ public class UserInfo implements Serializable {
     private String avatarPath;
 
     /**
+     * 已存储图像总数
+     */
+    private Long storedNum;
+
+    /**
      * 已存储图像总大小（字节）
      */
     private Long storedSize;
@@ -57,6 +62,11 @@ public class UserInfo implements Serializable {
     private Date updateTime;
 
     public UserInfo() {
+    }
+
+    public UserInfo(Integer userId, String nickname) {
+        this.userId = userId;
+        this.nickname = nickname;
     }
 
     public UserInfo(Integer userId, String nickname, String secondaryPath) {

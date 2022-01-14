@@ -16,6 +16,7 @@ public abstract class UserInfoConvert {
             @Mapping(source = "user.username", target = "username"),
             @Mapping(source = "userInfo.nickname", target = "nickname"),
             @Mapping(source = "userInfo.avatarPath", target = "avatarUrl"),
+            @Mapping(source = "userInfo.storedNum", target = "storedNum"),
             @Mapping(source = "userInfo.storedSize", target = "storedSize"),
             @Mapping(source = "user.createTime", target = "createTime", dateFormat = "yyyy-MM-dd HH:mm")
     })

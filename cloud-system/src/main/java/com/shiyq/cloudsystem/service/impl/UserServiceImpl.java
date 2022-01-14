@@ -6,6 +6,7 @@ import com.shiyq.cloudsystem.convert.UserConvert;
 import com.shiyq.cloudsystem.entity.DO.Setting;
 import com.shiyq.cloudsystem.entity.DO.User;
 import com.shiyq.cloudsystem.entity.DO.UserInfo;
+import com.shiyq.cloudsystem.entity.DTO.UserContext;
 import com.shiyq.cloudsystem.entity.VO.UserVO;
 import com.shiyq.cloudsystem.entity.VO.UserRequest;
 import com.shiyq.cloudsystem.mapper.SettingMapper;
@@ -149,6 +150,20 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         mailSender.send(msg);
 
         return true;
+    }
+
+    /**
+     * 更新用户密码
+     * @return 数据库受影响的行数 0：与原密码相同，1：已修改，-1：原密码错误
+     */
+    @Override
+    public int updatePassword(String oldPassword, String newPassword) {
+        User user = userMapper.selectById(UserContext.getCurrentUserId());
+        if (user.getPassword().equals(oldPassword)) {
+            return userMapper.updateById(new User(UserContext.getCurrentUserId(), newPassword));
+        } else {
+            return -1;
+        }
     }
 
 }

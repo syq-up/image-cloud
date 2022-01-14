@@ -5,6 +5,7 @@ import com.shiyq.cloudsystem.service.UserInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -32,6 +33,13 @@ public class UserInfoController {
     @GetMapping("/getUserInfo")
     public XhrResult getUserInfo() {
         return XhrResult.success(userInfoService.getUserInfo());
+    }
+
+    @GetMapping("/updateUserInfo")
+    public XhrResult updateUserInfo(@RequestParam String nickname) {
+        return userInfoService.updateUserInfo(nickname) >= 0
+                ? XhrResult.success("Nickname changed successfully.")
+                : XhrResult.error();
     }
 
 }

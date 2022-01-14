@@ -5,6 +5,10 @@
         UPDATE `user_info` SET `stored_size` = `stored_size` + #{increase} WHERE `user_id` = #{userId}
     </update>
 
+    <update id="updateStoredNumByIncrease">
+        UPDATE `user_info` SET `stored_num` = `stored_num` + #{increase} WHERE `user_id` = #{userId}
+    </update>
+
     <update id="updateSecondaryPathByNewPath">
         UPDATE `user_info` SET `secondary_path` = JSON_MERGE(`secondary_path`, #{newPath}) WHERE `user_id`=#{userId}
     </update>

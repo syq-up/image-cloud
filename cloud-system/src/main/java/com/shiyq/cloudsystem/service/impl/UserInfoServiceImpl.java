@@ -47,11 +47,16 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> i
         User user = userMapper.selectById(UserContext.getCurrentUserId());
         UserInfo userInfo = userInfoMapper.selectById(UserContext.getCurrentUserId());
         // 默认头像or用户自定义头像
-        if ("".equals(userInfo.getAvatarPath()))
-            userInfo.setAvatarPath(imageUrlPrefix + "avatar_default.jpg");
-        else
+        if (!"".equals(userInfo.getAvatarPath()))
             userInfo.setAvatarPath(imageUrlPrefix + UserContext.getCurrentUserId() + "/" + userInfo.getAvatarPath());
         return UserInfoConvert.INSTANCE.userAndUserInfo2UserInfoVO(user, userInfo);
+    }
+
+    /**
+     * 更新用户昵称
+     */
+    public int updateUserInfo(String nickname) {
+        return userInfoMapper.updateById(new UserInfo(UserContext.getCurrentUserId(), nickname));
     }
 
 }

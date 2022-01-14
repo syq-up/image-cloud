@@ -19,4 +19,9 @@ public interface UserInfoService extends IService<UserInfo> {
      */
     UserInfoVO getUserInfo();
 
+    /**
+     * 更新用户昵称
+     */
+    int updateUserInfo(String nickname);
+
 }
