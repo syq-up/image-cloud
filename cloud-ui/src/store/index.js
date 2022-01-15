@@ -20,6 +20,7 @@ export default createStore({
       username: '',
       nickname: '',
       avatarUrl: '',
+      storedNum: 0,
       storedSize: 0,
       secondaryPathList: [],
       createTime: '',
@@ -43,11 +44,12 @@ export default createStore({
       state.settings.init = false
     },
     // 更新全局用户信息
-    initUserInfo(state, newValue) {
+    updateUserInfo(state, newValue) {
       for (const key in newValue) {
         if (Object.hasOwnProperty.call(state.userInfo, key))
           state.userInfo[key] = newValue[key]
       }
+      state.userInfo.avatarUrl = state.userInfo.avatarUrl || require('../assets/cat.jpg')
     },
     pushSecondaryPathList(state, newValue) {
       state.userInfo.secondaryPathList.push(newValue)

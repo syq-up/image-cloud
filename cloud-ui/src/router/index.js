@@ -89,7 +89,7 @@ router.beforeEach((to, from, next)=>{
       server.all([server.get('/user-info/getUserInfo'), server.get('/setting/getSetting')])
         .then(server.spread((info, setting)=>{
           // 初始化全局用户信息、全局用户设置
-          store.commit('initUserInfo', info.data)
+          store.commit('updateUserInfo', info.data)
           store.commit('initSettings', setting.data)
           // 初始化成功后，跳转到指定页面
           document.title = to.meta.title + ' - imagecloud'

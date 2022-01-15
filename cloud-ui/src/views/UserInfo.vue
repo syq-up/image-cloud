@@ -209,6 +209,8 @@ export default {
 				nickname: updateForm.nickname
 			}
 			server.get('/user-info/updateUserInfo', {params}).then(res=>{
+        userInfo.nickname = updateForm.nickname
+        store.commit('updateUserInfo', {nickname: updateForm.nickname})
 				ElMessage.success(res.msg)
 			})
 

@@ -123,7 +123,6 @@ export default {
       username: '',
       password: '',
       confirmPassword: '',  // 注册时的确认密码
-      passwordMd5: '',  // 本地存储的密码
       code: '', // 注册表单的邮箱验证码
       error: '',  // 提示的错误信息
       disabled : true,  // 用户名（邮箱）检查通过前，发送邮件按钮不可点击
@@ -158,8 +157,8 @@ export default {
     function checkPassword() {
       if (login.password.length === 0) {
         login.error = 'Please enter your password.'
-      } else if (login.password.length < 6 || login.password.length > 20) {
-        login.error = 'Passwords must be between 6 to 20 characters.'
+      } else if (login.password.length < 6 || login.password.length > 30) {
+        login.error = 'Passwords must be between 6 to 30 characters.'
       } else {
         login.error = ''
         return true
@@ -189,10 +188,10 @@ export default {
         login.loadingLogin = false
         return false
       }
-      // 对密码进行md5加密，login.passwordMd5是本地存储的密码
+      // 对密码进行md5加密
       const data = {
         username: login.username,
-        password: login.passwordMd5 || md5(login.password+'#'+login.password),
+        password: md5(login.password+'#'+login.password),
       }
       // 请求登录，获取访问令牌
       server.post('/user/sign-in', data).then(res=>{
@@ -240,7 +239,7 @@ export default {
       server.all([server.get('/user-info/getUserInfo'), server.get('/setting/getSetting')])
         .then(server.spread((info, setting)=>{
           // 初始化全局用户信息、全局用户设置
-          store.commit('initUserInfo', info.data)
+          store.commit('updateUserInfo', info.data)
           store.commit('initSettings', setting.data)
           // 初始化完成，移除loading图标
           login.loadingLogin = false

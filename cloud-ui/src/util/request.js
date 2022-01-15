@@ -2,7 +2,6 @@ import axios from 'axios'
 import store from '../store'
 import router from '../router'
 import { ElMessage } from 'element-plus'
-import errorCode from './errorCode'
 
 // 创建axios实例
 const server = axios.create({
@@ -55,14 +54,14 @@ server.interceptors.response.use(
     // 未设置状态码则默认成功状态
     const code = res.data.code || 200;
     // 获取错误信息
-    // const msg = errorCode[code] || res.data.msg || errorCode['default']
-    const msg = res.data.msg || errorCode['default']
-    if (code === 401) {
+    const msg = res.data.msg || 'Unknown error, please contact administrator!'
+    
+    if (code >=200 && code <300) {
+      return res.data
+    } else if (code === 401) {
       store.commit('setAccessToken', '')
       localStorage.removeItem('accessToken')
       router.push({path: '/login'})
-    } else {
-      return res.data
     }
     ElMessage.error(msg)
     return Promise.reject(msg)

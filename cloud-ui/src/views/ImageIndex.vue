@@ -50,6 +50,10 @@
               </template>
             </el-dropdown>
           </div>
+          <div class="right-menu">
+            <span class="greet" style="color: #000000d0;">Hi, </span>
+            <span class="greet" style="color: #409eff;">{{ $store.state.userInfo.nickname }}~</span>
+          </div>
         </div>
       </div>
       <div class="app-main" :style="$store.state.settings.fixedHeader ? 'margin-top: calc(50px + 1rem)' : ''">
@@ -386,13 +390,8 @@ export default {
   height: 100%;
   margin-right: 1rem;
 }
-.menubar .right-menu .right-menu-item {
-  display: inline-block;
-  padding: 0 8px;
-  height: 100%;
-  font-size: 18px;
-  color: #5a5e66;
-  vertical-align: text-bottom;
+.menubar .right-menu .greet {
+  line-height: 50px;
 }
 .fixed-header {
   position: fixed;
