@@ -18,7 +18,7 @@ import java.util.List;
 public class TimerConfig {
 
     // 已逻辑删除的图像，最长保留时间（10天）
-    private static final long MAX_STAY_TIME = 10*24*60*60;
+    private static final long MAX_STAY_TIME = 10*24*60*60*1000;
 
     // 图像上传根路径
     @Value("${file.uploadFolder}")
@@ -47,7 +47,7 @@ public class TimerConfig {
 
         List<Image> imageList = imageMapper.getAllRecycleList();
         // 对逻辑删除时间大于等于limitDate的图像执行删除
-        imageList.stream().filter(image -> image.getUpdateTime().getTime() >= limitDate).forEach(image -> {
+        imageList.stream().filter(image -> image.getUpdateTime().getTime() <= limitDate).forEach(image -> {
             if (imageMapper.realDeleteById(image.getId())) {
                 String filePath = uploadFolder + String.format("%06d", image.getUserId()) + "/" + image.getPath();
                 if (!new File(filePath).delete()) {
