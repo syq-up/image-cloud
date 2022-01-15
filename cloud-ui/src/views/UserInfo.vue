@@ -2,7 +2,13 @@
   <page-header title="User Info" tip="Your infomations."></page-header>
 	<div class="info">
 		<div class="avatar">
-			<img :src="userInfo.avatarUrl">
+			<el-upload class="avatar-uploader" action="/api/user-info/uploadAvatar" name="avatarFile"
+				:headers="{'Authorization': `Bearer ${$store.state.accessToken}`}" :show-file-list="false"
+				:on-success="uploadAvatarSuccess" :before-upload="beforeUploadAvatar"
+			>
+				<img src="../assets/icon/user_info/avatar_upload.svg" alt="avatar_upload">
+			</el-upload>
+			<img class="avatar-img" :src="userInfo.avatarUrl" alt="avatar">
 		</div>
 		<el-descriptions
 			class="margin-top"
@@ -134,6 +140,7 @@ import { useStore } from 'vuex'
 import server from '@/util/request';
 import md5 from 'js-md5'
 import '@/assets/css/el-input-medium.css'
+import '@/assets/css/el-upload-avatar.css'
 import PageHeader from '@/components/PageHeader'
 import { ElMessage } from 'element-plus';
 
@@ -166,6 +173,7 @@ export default {
         return `${(store.state.userInfo.storedSize / 1024/1024/1024).toFixed(2)} GB`
     })
 
+		// 次级路径数组转树结构
 		function pathListToTree(pathList) {
 			// 1.记录根位置
 			let tree = []
@@ -195,6 +203,25 @@ export default {
 			return tree
 		}
 
+		// 更新用户头像
+		function beforeUploadAvatar(file) {
+			// 检查文件大小
+      if (file.size > 1*1024*1024) {
+        ElMessage.warning('The file size cannot exceed 1MB!')
+        return
+      }
+		}
+		function uploadAvatarSuccess(res) {
+			if (res.code === 200) {
+				store.state.userInfo.avatarUrl = res.avatarUrl
+				userInfo.avatarUrl = res.avatarUrl
+				ElMessage.success('The avatar was updated successfully.')
+			} else {
+				ElMessage.error(res.msg)
+			}
+		}
+
+		// 用户信息更新表单
 		const updateForm = reactive({
 			form: 'basicInfo',
 			nickname: store.state.userInfo.nickname,
@@ -204,6 +231,7 @@ export default {
 			error: '',
 		})
 
+		// 更新用户基本信息
 		function modifyInfo() {
 			let params = {
 				nickname: updateForm.nickname
@@ -213,13 +241,13 @@ export default {
         store.commit('updateUserInfo', {nickname: updateForm.nickname})
 				ElMessage.success(res.msg)
 			})
-
 		}
 		function resetInfoForm() {
 			updateForm.nickname = store.state.userInfo.nickname
 			updateForm.error = ''
 		}
 
+		// 更新用户密码
 		function modifyPwd() {
 			if (updateForm.newPassword.length <6 || updateForm.newPassword.length >30) {
 				updateForm.error = 'Passwords must be between 6 to 30 characters.'
@@ -245,7 +273,11 @@ export default {
 			updateForm.error = ''
 		}
 
-		return { userInfo, storedSize, updateForm, modifyInfo, resetInfoForm, modifyPwd, resetPwdForm }
+		return {
+			userInfo, storedSize,
+			beforeUploadAvatar, uploadAvatarSuccess,
+			updateForm, modifyInfo, resetInfoForm, modifyPwd, resetPwdForm
+		}
 	}
 }
 </script>
@@ -258,14 +290,40 @@ export default {
 	align-items: center;
 }
 .avatar {
-	width: 97px;
-	height: 97px;
+	--avatar-w: 97px;
+	--avatar-h: 97px;
+	width: var(--avatar-w);
+	height: var(--avatar-h);
 	margin-right: 20px;
 }
-.avatar img {
-	width: 100%;
-	height: 100%;
+.avatar .avatar-img {
+	width: var(--avatar-w);
+	height: var(--avatar-h);
 	border-radius: 10px;
+	position: relative;
+	top: 0;
+	z-index: 1;
+}
+.avatar:hover .avatar-img {
+	top: -97px;
+}
+.avatar .avatar-uploader {
+	width: var(--avatar-w);
+	height: var(--avatar-h);
+	border-radius: 10px;
+	position: relative;
+	z-index: 2;
+	display: none;
+}
+.avatar .avatar-uploader img {
+	width: 36px;
+	height: 36px;
+	position: relative;
+	top: 50%;
+	transform: translateY(-50%);
+}
+.avatar:hover .avatar-uploader {
+	display: block;
 }
 .card-list {
 	margin: 1rem;

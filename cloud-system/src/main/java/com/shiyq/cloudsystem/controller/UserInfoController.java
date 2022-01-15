@@ -3,10 +3,10 @@ package com.shiyq.cloudsystem.controller;
 import com.shiyq.cloudsystem.entity.VO.XhrResult;
 import com.shiyq.cloudsystem.service.UserInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 /**
  * <p>
@@ -40,6 +40,18 @@ public class UserInfoController {
         return userInfoService.updateUserInfo(nickname) >= 0
                 ? XhrResult.success("Nickname changed successfully.")
                 : XhrResult.error();
+    }
+
+    @PostMapping("/uploadAvatar")
+    public XhrResult uploadAvatar(MultipartFile avatarFile) {
+        XhrResult xhrResult;
+        try {
+            xhrResult = XhrResult.success();
+            xhrResult.put("avatarUrl", userInfoService.uploadUserAvatar(avatarFile));
+        } catch (IOException e) {
+            xhrResult = XhrResult.error("IO Exception!");
+        }
+        return xhrResult;
     }
 
 }

@@ -9,9 +9,13 @@ import com.shiyq.cloudsystem.entity.VO.UserInfoVO;
 import com.shiyq.cloudsystem.mapper.UserInfoMapper;
 import com.shiyq.cloudsystem.mapper.UserMapper;
 import com.shiyq.cloudsystem.service.UserInfoService;
+import com.shiyq.cloudsystem.util.FileUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 /**
  * <p>
@@ -24,6 +28,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> implements UserInfoService {
 
+    @Value("${file.uploadFolder}")
+    private String uploadFolder;
     @Value("${file.staticAccessUrlPrefix}")
     private String imageUrlPrefix;
 
@@ -58,6 +64,22 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> i
      */
     public int updateUserInfo(String nickname) {
         return userInfoMapper.updateById(new UserInfo(UserContext.getCurrentUserId(), nickname));
+    }
+
+    /**
+     * 上传用户头像
+     */
+    @Override
+    public String uploadUserAvatar(MultipartFile avatarFile) throws IOException {
+        // 上传文件
+        String uploadPath = uploadFolder + String.format("%06d", UserContext.getCurrentUserId());
+        String filename = FileUtil.writeFile(uploadPath, "avatar", avatarFile);
+        // 更新数据库
+        UserInfo userInfo = new UserInfo(UserContext.getCurrentUserId());
+        userInfo.setAvatarPath(filename);
+        userInfoMapper.updateById(userInfo);
+        // 返回前端头像url
+        return imageUrlPrefix + String.format("%06d", UserContext.getCurrentUserId()) + "/" + filename;
     }
 
 }

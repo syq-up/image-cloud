@@ -77,6 +77,7 @@ import server from '@/util/request';
 import '@/assets/css/el-upload.css'
 import PageHeader from '@/components/PageHeader'
 import Image from '@/components/Image'
+import { ElMessage } from 'element-plus';
 
 export default {
   name: 'ImageUpload',
@@ -132,7 +133,10 @@ export default {
     })
     function beforeUpload(file) {
       // 检查文件大小
-      if (file.size > 5*1024*1024)
+      if (file.size > 5*1024*1024) {
+        ElMessage.warning('File too large!')
+        return
+      }
       // 上传前更新携带的信息data
       upload.data.secondaryPath = upload.secondaryPath.substring(1)
       // 上传成功前暂时使用文件uid区别不同图像
