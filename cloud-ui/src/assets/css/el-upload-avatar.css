@@ -1,11 +1,11 @@
 /* 上传组件-上传头像 样式 */
-.el-upload {
+.avatar .el-upload {
 	box-sizing: border-box;
   width: 100%;
 	height: 100%;
 	border-radius: 10px;
 }
-.el-upload:hover {
+.avatar .el-upload:hover {
 	background-color: #00000025;
 	border: 2px dashed #409eff;
 }
