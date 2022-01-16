@@ -63,6 +63,9 @@ file:
   staticAccessPath: /images/** # 上传的静态资源对外暴露的访问路径
   staticAccessUrlPrefix: ${url}/ # 外部访问上传的静态资源时的前缀（可选项）
 
+  maxFileSize: 5MB # 单个文件最大大小
+  maxRequestSize: 120MB # 单次请求最大大小
+
 # 雪花算法
 snow-flake:
   datacenterId: 1 # 机房id

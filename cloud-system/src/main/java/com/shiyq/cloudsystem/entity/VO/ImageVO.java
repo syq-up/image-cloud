@@ -9,5 +9,6 @@ import lombok.Data;
 public class ImageVO {
     private String id;
     private String url;
+    private Integer size;
     private String createTime;
 }

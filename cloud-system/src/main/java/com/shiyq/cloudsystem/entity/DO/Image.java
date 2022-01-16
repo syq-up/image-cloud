@@ -26,11 +26,16 @@ public class Image implements Serializable {
     /**
      * 主键id
      */
-    @TableId(value = "id", type = IdType.INPUT)
+    @TableId(value = "id", type = IdType.ASSIGN_ID)
     private Long id;
 
     /**
-     * 图像存储路径
+     * 图像文件名
+     */
+    private String filename;
+
+    /**
+     * 图像存储路径（次级路径）
      */
     private String path;
 
@@ -70,8 +75,8 @@ public class Image implements Serializable {
         this.id = id;
     }
 
-    public Image(Long id, String path, Integer size, Integer userId) {
-        this.id = id;
+    public Image(String filename, String path, Integer size, Integer userId) {
+        this.filename = filename;
         this.path = path;
         this.size = size;
         this.userId = userId;

@@ -26,6 +26,10 @@ public class WebMvcConfig implements WebMvcConfigurer {
     private String uploadFolder;
     @Value("${file.staticAccessPath}")
     private String staticAccessPath;
+    @Value("${file.maxFileSize}")
+    private String maxFileSize;
+    @Value("${file.maxRequestSize}")
+    private String maxRequestSize;
 
     /**
      * 解决跨域问题
@@ -60,8 +64,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
     public MultipartConfigElement multipartConfigElement() {
         MultipartConfigFactory factory = new MultipartConfigFactory();
         factory.setLocation(uploadFolder);
-        factory.setMaxFileSize(DataSize.parse("5MB"));
-        factory.setMaxRequestSize(DataSize.parse("120MB"));
+        factory.setMaxFileSize(DataSize.parse(maxFileSize));
+        factory.setMaxRequestSize(DataSize.parse(maxRequestSize));
         return factory.createMultipartConfig();
     }
 

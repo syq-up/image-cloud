@@ -9,7 +9,7 @@ import com.shiyq.cloudsystem.entity.VO.UserInfoVO;
 import com.shiyq.cloudsystem.mapper.UserInfoMapper;
 import com.shiyq.cloudsystem.mapper.UserMapper;
 import com.shiyq.cloudsystem.service.UserInfoService;
-import com.shiyq.cloudsystem.util.FileUtil;
+import com.shiyq.cloudsystem.util.FileUploadUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -73,7 +73,7 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> i
     public String uploadUserAvatar(MultipartFile avatarFile) throws IOException {
         // 上传文件
         String uploadPath = uploadFolder + String.format("%06d", UserContext.getCurrentUserId());
-        String filename = FileUtil.writeFile(uploadPath, "avatar", avatarFile);
+        String filename = FileUploadUtil.INSTANCE.uploadFile("", avatarFile);
         // 更新数据库
         UserInfo userInfo = new UserInfo(UserContext.getCurrentUserId());
         userInfo.setAvatarPath(filename);

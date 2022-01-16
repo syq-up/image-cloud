@@ -34,7 +34,7 @@ public interface ImageService extends IService<Image> {
      * @return 图像对象 {id, path, createTime}
      * @throws IOException 写文件异常
      */
-    ImageVO uploadWebImage(UploadRequest uploadRequest) throws IOException;
+    ImageVO uploadWebImage(UploadRequest uploadRequest) throws Exception;
 
     /**
      * 查询【图像列表】 默认以时间倒序获取

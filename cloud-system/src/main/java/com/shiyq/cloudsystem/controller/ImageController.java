@@ -39,7 +39,7 @@ public class ImageController {
         try {
             return XhrResult.success(imageService.uploadImage(uploadRequest, file));
         } catch (IOException e) {
-            return XhrResult.error("IO Exception");
+            return XhrResult.error(e.getMessage());
         }
     }
 
@@ -52,8 +52,8 @@ public class ImageController {
     public XhrResult uploadWebImage(@RequestBody UploadRequest uploadRequest) {
         try {
             return XhrResult.success(imageService.uploadWebImage(uploadRequest));
-        } catch (IOException e) {
-            return XhrResult.error("IO Exception");
+        } catch (Exception e) {
+            return XhrResult.error(e.getMessage());
         }
     }
 

@@ -30,6 +30,6 @@ public interface UserInfoMapper extends BaseMapper<UserInfo> {
     /**
      * 更新已创建次级路径列表，在原值上追加新创建路径值
      */
-    boolean updateSecondaryPathByNewPath(int userId, String newPath);
+    boolean updateSecondaryPathByIncrease(int userId, String newPath);
 
 }
