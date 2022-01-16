@@ -34,8 +34,6 @@ import java.util.List;
 @Service
 public class ImageServiceImpl extends ServiceImpl<ImageMapper, Image> implements ImageService {
 
-    @Value("${file.uploadFolder}")
-    private String uploadFolder;
     @Value("${file.staticAccessUrlPrefix}")
     private String imageUrlPrefix;
 
@@ -133,10 +131,11 @@ public class ImageServiceImpl extends ServiceImpl<ImageMapper, Image> implements
         imageMapper.selectPage(page, queryWrapper);
 
         // 添加图像url前缀
-        page.getRecords().forEach(
-                image -> image.setPath(imageUrlPrefix.replace("**", "") +
-                        String.format("%06d", UserContext.getCurrentUserId()) + "/" + image.getPath())
-        );
+        page.getRecords().forEach(image -> {
+            String imageUrl = imageUrlPrefix + String.format("%06d", UserContext.getCurrentUserId()) + "/"
+                    + image.getPath() + "/" + image.getFilename();
+            image.setPath(imageUrl);
+        });
 
         return ImageConvert.INSTANCE.page2PageVO(page);
     }
@@ -153,10 +152,11 @@ public class ImageServiceImpl extends ServiceImpl<ImageMapper, Image> implements
         List<Image> recycleList =
                 imageMapper.getRecycleListByIdAndPageNum(UserContext.getCurrentUserId(), 25, (pageNum-1)*25);
         // 添加图像url前缀
-        recycleList.forEach(
-                image -> image.setPath(imageUrlPrefix.replace("**", "") +
-                        String.format("%06d", UserContext.getCurrentUserId()) + "/" + image.getPath())
-        );
+        recycleList.forEach(image -> {
+            String imageUrl = imageUrlPrefix + String.format("%06d", UserContext.getCurrentUserId()) + "/"
+                    + image.getPath() + "/" + image.getFilename();
+            image.setPath(imageUrl);
+        });
         pageVO.setRecords(ImageConvert.INSTANCE.ImageDOs2VOs(recycleList));
         // 回收站记录总数（逻辑删除的记录总数）
         pageVO.setTotal(imageMapper.getTotalRecycle(UserContext.getCurrentUserId()));
