@@ -42,31 +42,6 @@
         ></yq-image>
       </el-space>
     </div>
-
-    <!-- 该部分暂时舍弃
-    <div class="success-info">
-      <div class="mdui-tab mdui-tab-scrollable">
-        <a href="javascript:" @click="showCode('code_url')"
-          :class="'mdui-ripple '+ (code.code_url ? 'mdui-tab-active' : '')">URL</a>
-        <a href="javascript:" @click="showCode('code_html')"
-          :class="'mdui-ripple '+ (code.code_html ? 'mdui-tab-active' : '')">HTML</a>
-        <a href="javascript:" @click="showCode('code_markdown')"
-          :class="'mdui-ripple '+ (code.code_markdown ? 'mdui-tab-active' : '')">Markdown</a>
-        <div class="mdui-tab-indicator" :style="'left:'+code.indicator*160+'px;width:160px;'"></div>
-      </div>
-      <ul v-show="code.code_url">
-        <li data-index="0">https://pic.iqy.ink/2021/12/30/2bcaf9b71f36c.png<i class="copy iconfont icon-copy"></i></li>
-        <li data-index="1">https://pic.iqy.ink/2021/12/30/743a11bb9a371.png<i class="copy iconfont icon-copy"></i></li>
-      </ul>
-      <ul v-show="code.code_html">
-        <li data-index="0">&lt;img src="https://pic.iqy.ink/2021/12/30/2bcaf9b71f36c.png" alt="add.png" title="add.png" /&gt;<i class="copy iconfont icon-copy"></i></li>
-        <li data-index="1">&lt;img src="https://pic.iqy.ink/2021/12/30/743a11bb9a371.png" alt="add-chapter.png" title="add-chapter.png" /&gt;<i class="copy iconfont icon-copy"></i></li>
-      </ul>
-      <ul v-show="code.code_markdown">
-        <li data-index="0">![add.png](https://pic.iqy.ink/2021/12/30/2bcaf9b71f36c.png)<i class="copy iconfont icon-copy"></i></li>
-        <li data-index="1">![add-chapter.png](https://pic.iqy.ink/2021/12/30/743a11bb9a371.png)<i class="copy iconfont icon-copy"></i></li>
-      </ul>
-    </div> -->
   </div>
 </template>
 
@@ -185,7 +160,7 @@ export default {
         if (res.code === 200) {
           upload.list[i].id = res.data.id
           upload.list[i].url = res.data.url
-          // TODO 网络图片暂时只在后端计算大小
+          store.commit('increaseStoredSize', res.data.size)
           updateSecondaryPath()
         } else {
           upload.error++
@@ -218,44 +193,6 @@ export default {
       document.getElementsByTagName("body")[0].className="ban-scroll"
     }
 
-    // 该部分暂时舍弃
-    // // 上传成功后，回显每张图片的链接，有3种类型，url、html标签、md标签，每次仅显示一类
-    // const code = reactive({
-    //   code_url: true,
-    //   code_html: false,
-    //   code_markdown: false,
-    //   indicator: 0,
-    // });
-    // function showCode(category) {
-    //   switch (category) {
-    //     case 'code_url':
-    //       code.code_url = true;
-    //       code.code_html = false;
-    //       code.code_markdown = false;
-    //       code.indicator = 0;
-    //       break;
-    //     case 'code_html':
-    //       code.code_url = false;
-    //       code.code_html = true;
-    //       code.code_markdown = false;
-    //       code.indicator = 1;
-    //       break;
-    //     case 'code_markdown':
-    //       code.code_url = false;
-    //       code.code_html = false;
-    //       code.code_markdown = true;
-    //       code.indicator = 2;
-    //       break;
-    //     default:
-    //       code.code_url = true;
-    //       code.code_html = false;
-    //       code.code_markdown = false;
-    //       code.indicator = 0;
-    //       break;
-    //   }
-    // }
-    // 
-    
     return {
       querySecondaryPath, checkSecondaryPath
       ,upload, beforeUpload, uploadOnSuccess, uploadOnError, uploadWebImage, getTotalSize
@@ -315,64 +252,4 @@ export default {
   display: flex;
   flex-wrap: wrap;
 }
-/* .success-info {
-  margin: 2rem 1rem 0 1rem;
-}
-.success-info .mdui-tab-scrollable {
-  padding-left: 0;
-}
-.success-info .mdui-tab-scrollable {
-  padding-left: 56px;
-}
-.success-info .mdui-tab {
-  position: relative;
-  display: flex;
-  height: 48px;
-  padding: 0;
-  margin: 0 auto;
-  overflow-x: auto;
-  overflow-y: hidden;
-  -webkit-overflow-scrolling: touch;
-  white-space: nowrap;
-}
-.mdui-tab-indicator {
-  position: absolute;
-  bottom: 0;
-  height: 2px;
-  background-color: #3f51b5;
-  -webkit-transition: all .35s cubic-bezier(.4,0,.2,1);
-  transition: all .35s cubic-bezier(.4,0,.2,1);
-  will-change: left,width;
-}
-.success-info .mdui-tab a {
-  height: 48px;
-  width: 160px;
-  line-height: 48px;
-  text-transform: inherit;
-  text-align:center;
-  align-self: center;
-  opacity: 0.8;
-}
-.success-info .mdui-tab .mdui-tab-active {
-  color: #3f51b5;
-  opacity: 1;
-}
-.success-info ul {
-  list-style: none;
-  margin: 0;
-  padding-left: 0;
-}
-.success-info ul li {
-  position: relative;
-  margin-top: 0.5rem;
-  padding: 0.8rem;
-  border: 1px solid #dadada;
-  background-color: #f7f7f7;
-  font-size: 14px;
-  color: #555;
-  white-space: pre-wrap;
-  word-break: break-all;
-  word-wrap: break-word;
-  border-radius: 0;
-} */
 </style>
