@@ -5,6 +5,8 @@
       <el-checkbox v-model="settings.multipleChoice" label="Multiple choice" border></el-checkbox>
       <el-checkbox v-model="$store.state.settings.showDateInList" label="Show Date" border
         v-if="!$store.state.settings.folderStyleInList"></el-checkbox>
+      <el-checkbox v-model="$store.state.settings.showDividerInList" label="Show Divider" border
+        v-if="$store.state.settings.folderStyleInList"></el-checkbox>
       <el-checkbox v-model="$store.state.settings.folderStyleInList" label="Folder Style" border></el-checkbox>
     </template>
   </page-header>
@@ -31,13 +33,29 @@
         </el-space>
       </div>
     </template>
-    <template v-if="$store.state.settings.folderStyleInList">
+    <template v-if="$store.state.settings.folderStyleInList && !$store.state.settings.showDividerInList">
       <div class="daily-list">
         <el-space wrap :size="14">
           <yq-folder v-for="folder in page.folderInCurrentPath" :key="'folder'+folder.id"
             :folderName="folder.name" @toNextPath="toNextPath"></yq-folder>
           <yq-image v-for="image in imageList" :key="image.id"
             :deleted="false" :imageObj="image" @lookBigImage="lookBigImage" @deleteByIndex="deleteByIndex"
+          ></yq-image>
+        </el-space>
+      </div>
+    </template>
+    <template v-if="$store.state.settings.folderStyleInList && $store.state.settings.showDividerInList">
+      <div class="daily-list">
+        <el-space wrap :size="14">
+          <yq-folder v-for="folder in page.folderInCurrentPath" :key="'folder'+folder.id"
+            :folderName="folder.name" @toNextPath="toNextPath"></yq-folder>
+        </el-space>
+      </div>
+      <el-divider></el-divider>
+      <div class="daily-list">
+        <el-space wrap :size="14">
+          <yq-image v-for="item in imageList" :key="item.id"
+            :deleted="false" :imageObj="item" @lookBigImage="lookBigImage" @deleteByIndex="deleteByIndex"
           ></yq-image>
         </el-space>
       </div>

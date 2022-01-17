@@ -48,6 +48,11 @@ public class Setting implements Serializable {
     private String folderStyleInList;
 
     /**
+     * 是否在图像列表的文件夹样式下分割文件夹和图像（0否1是，默认1）
+     */
+    private String showDividerInList;
+
+    /**
      * 是否在回收站列表显示时间标签（0否1是，默认1）
      */
     private String showDateInRecycle;
@@ -56,6 +61,11 @@ public class Setting implements Serializable {
      * 是否以文件夹样式显示回收站列表（0否1是，默认0）
      */
     private String folderStyleInRecycle;
+
+    /**
+     * 是否在回收站列表的文件夹样式下分割文件夹和图像（0否1是，默认1）
+     */
+    private String showDividerInRecycle;
 
     /**
      * 是否固定头部（0否1是，默认0）

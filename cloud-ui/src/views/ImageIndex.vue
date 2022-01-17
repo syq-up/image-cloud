@@ -93,12 +93,20 @@
             <el-switch v-model="$store.state.settings.folderStyleInList" />
           </div>
           <div class="drawer-item">
+            <span data-v-1269b55a="">Show Divider In List</span>
+            <el-switch v-model="$store.state.settings.showDividerInList" />
+          </div>
+          <div class="drawer-item">
             <span data-v-1269b55a="">Show Date In Recycle</span>
             <el-switch v-model="$store.state.settings.showDateInRecycle" />
           </div>
           <div class="drawer-item">
             <span data-v-1269b55a="">Folder Style In Recycle</span>
             <el-switch v-model="$store.state.settings.folderStyleInRecycle" />
+          </div>
+          <div class="drawer-item">
+            <span data-v-1269b55a="">Show Divider In Recycle</span>
+            <el-switch v-model="$store.state.settings.showDividerInRecycle" />
           </div>
           <div class="drawer-item">
             <span data-v-1269b55a="">Fixed Header</span>

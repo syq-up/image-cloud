@@ -11,7 +11,7 @@
  Target Server Version : 50733
  File Encoding         : 65001
 
- Date: 17/01/2022 13:35:17
+ Date: 17/01/2022 20:11:31
 */
 
 SET NAMES utf8mb4;
@@ -43,8 +43,10 @@ CREATE TABLE `setting`  (
   `theme_color` varchar(10) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '#409EFF' COMMENT '主题颜色（十六进制）',
   `show_date_in_list` char(1) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '1' COMMENT '是否在图像列表显示时间标签（0否1是，默认1）',
   `folder_style_in_list` char(1) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '0' COMMENT '是否以文件夹样式显示图像列表（0否1是，默认0）',
+  `show_divider_in_list` char(1) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '1' COMMENT '是否在图像列表的文件夹样式下分割文件夹和图像（0否1是，默认1）',
   `show_date_in_recycle` char(1) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '1' COMMENT '是否在回收站列表显示时间标签（0否1是，默认1）',
   `folder_style_in_recycle` char(1) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '0' COMMENT '是否以文件夹样式显示回收站列表（0否1是，默认0）',
+  `show_divider_in_recycle` char(1) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '1' COMMENT '是否在回收站列表的文件夹样式下分割文件夹和图像（0否1是，默认1）',
   `fixed_header` char(1) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '0' COMMENT '是否固定头部（0否1是，默认0）',
   `dynamic_title` char(1) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '1' COMMENT '是否显示动态标题（0否1是，默认1）',
   `upload_directly` char(1) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '1' COMMENT '是否立即上传图像（0否1是，默认1）',
