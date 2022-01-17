@@ -10,7 +10,6 @@
           <el-button @click="uploadWebImage"><img src="../assets/icon/upload/input_upload.svg"></el-button>
         </template>
       </el-input>
-      <span v-if="!$store.state.settings.uploadDirectly">该功能暂时无效 </span>
       <el-checkbox v-model="$store.state.settings.uploadDirectly" label="Upload directly" border></el-checkbox>
     </template>
   </page-header>
@@ -29,6 +28,7 @@
     </div>
     <div class="file-menu-group">
       <span class="count">Selected: <b>{{ upload.selected }}</b> <span>images</span>, Total: <b>{{ getTotalSize }}</b> .</span>
+      <span v-if="!$store.state.settings.uploadDirectly">该功能暂时无效 </span>
       <el-button-group v-if="!$store.state.settings.uploadDirectly">
         <el-button type="info" size="large"><img class="icon" src="../assets/icon/upload/clear.svg">Clear</el-button>
         <el-button type="info" size="large"><img class="icon" src="../assets/icon/upload/upload.svg">Upload</el-button>

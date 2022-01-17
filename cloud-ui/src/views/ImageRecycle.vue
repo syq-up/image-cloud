@@ -3,7 +3,9 @@
 		<template #menu>
       <span v-if="settings.multipleChoice">该功能暂时无效 </span>
       <el-checkbox v-model="settings.multipleChoice" label="Multiple choice" border></el-checkbox>
-      <el-checkbox v-model="$store.state.settings.showDateInRecycle" label="Show date tag" border></el-checkbox>
+      <el-checkbox v-model="$store.state.settings.showDateInRecycle" label="Show Date" border
+        v-if="!$store.state.settings.folderStyleInRecycle"></el-checkbox>
+      <el-checkbox v-model="$store.state.settings.folderStyleInRecycle" label="Folder Style" border></el-checkbox>
     </template>
 	</page-header>
 	<div v-infinite-scroll="loadImages" :infinite-scroll-disabled="page.disabled">
@@ -151,12 +153,9 @@ export default {
 
 <style scoped>
 .daily-list {
-  margin: 0 1rem;
+  margin: 0 0 0 1rem;
   display: -webkit-flex;
   display: flex;
   flex-wrap: wrap;
-}
-.el-checkbox {
-  margin-right: 15px;
 }
 </style>

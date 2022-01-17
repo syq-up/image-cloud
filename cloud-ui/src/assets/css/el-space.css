@@ -1,0 +1,4 @@
+/* 水平间距，最后一个元素没有右边距 */
+.el-space.el-space--horizontal .el-space__item:last-child {
+  margin-right: 0 !important;
+}

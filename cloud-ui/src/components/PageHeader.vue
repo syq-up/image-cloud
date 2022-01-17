@@ -5,7 +5,7 @@
       <span>[ {{ tip }} ]</span>
     </div>
     <div class="right">
-      <el-space>
+      <el-space :size="15">
         <slot name="menu"></slot>
       </el-space>
     </div>
@@ -13,7 +13,8 @@
 </template>
 
 <script>
-// import { reactive } from 'vue';
+import '@/assets/css/el-space.css'
+
 export default {
   name: 'PageHeader',
   props: {

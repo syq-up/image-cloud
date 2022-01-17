@@ -3,8 +3,9 @@
     <template #menu>
       <span v-if="settings.multipleChoice">该功能暂时无效 </span>
       <el-checkbox v-model="settings.multipleChoice" label="Multiple choice" border></el-checkbox>
-      UI Style: <el-cascader v-model="settings.value" :options="settings.listStyle"></el-cascader>
-      <el-checkbox v-model="$store.state.settings.showDateInList" label="Show date tag" border></el-checkbox>
+      <el-checkbox v-model="$store.state.settings.showDateInList" label="Show Date" border
+        v-if="!$store.state.settings.folderStyleInList"></el-checkbox>
+      <el-checkbox v-model="$store.state.settings.folderStyleInList" label="Folder Style" border></el-checkbox>
     </template>
   </page-header>
   <div v-infinite-scroll="loadImages" :infinite-scroll-disabled="page.disabled">
@@ -158,8 +159,5 @@ export default {
   display: -webkit-flex;
   display: flex;
   flex-wrap: wrap;
-}
-.el-checkbox {
-  margin-right: 15px;
 }
 </style>

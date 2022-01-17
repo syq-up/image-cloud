@@ -12,7 +12,9 @@ public class SettingVO {
     private String theme;
     private String themeColor;
     private Boolean showDateInList;
+    private Boolean folderStyleInList;
     private Boolean showDateInRecycle;
+    private Boolean folderStyleInRecycle;
     private Boolean fixedHeader;
     private Boolean dynamicTitle;
     // 操作设置

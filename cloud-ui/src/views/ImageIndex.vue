@@ -59,7 +59,9 @@
       <div class="app-main" :style="$store.state.settings.fixedHeader ? 'margin-top: calc(50px + 1rem)' : ''">
         <router-view/>
       </div>
-      <el-drawer v-model="settingsDrawer" :with-header="false" :size="260" append-to-body>
+      <el-drawer v-model="settingsDrawer" :with-header="false" :size="260" append-to-body :lock-scroll="false"
+        @open="bodyScroll(true)" @close="bodyScroll(false)"
+      >
         <div class="drawer-container">
           <h3 class="drawer-title">Theme style settings</h3>
           <div class="drawer-item-theme">
@@ -76,10 +78,10 @@
               <img class="theme-img" src="../assets/icon/theme/theme_light.svg" alt="light">
             </div>
           </div>
-          <div class="drawer-item">
+          <!-- <div class="drawer-item">
             <span data-v-1269b55a="">Theme color</span>
             <el-color-picker v-model="$store.state.settings.themeColor" />
-          </div>
+          </div> -->
           <el-divider></el-divider>
           <h3 class="drawer-title">System layout settings</h3>
           <div class="drawer-item">
@@ -87,17 +89,26 @@
             <el-switch v-model="$store.state.settings.showDateInList" />
           </div>
           <div class="drawer-item">
+            <span data-v-1269b55a="">Folder Style In List</span>
+            <el-switch v-model="$store.state.settings.folderStyleInList" />
+          </div>
+          <div class="drawer-item">
             <span data-v-1269b55a="">Show Date In Recycle</span>
             <el-switch v-model="$store.state.settings.showDateInRecycle" />
+          </div>
+          <div class="drawer-item">
+            <span data-v-1269b55a="">Folder Style In Recycle</span>
+            <el-switch v-model="$store.state.settings.folderStyleInRecycle" />
           </div>
           <div class="drawer-item">
             <span data-v-1269b55a="">Fixed Header</span>
             <el-switch v-model="$store.state.settings.fixedHeader" />
           </div>
-          <div class="drawer-item">
+          <!-- <div class="drawer-item">
             <span data-v-1269b55a="">Dynamic Title</span>
             <el-switch v-model="$store.state.settings.dynamicTitle" />
-          </div>
+          </div> -->
+
           <el-divider></el-divider>
           <h3 class="drawer-title">User operation settings</h3>
           <div class="drawer-item">
@@ -173,7 +184,7 @@ export default {
     })
     function closeShade() {
       store.commit('changeShade', false)
-      document.body.removeAttribute("class","ban-scroll");
+      document.body.removeAttribute("class","ban-scroll")
     }
     function lastImage () {
       store.commit('changeImageListIndexByStep', -1)
@@ -206,6 +217,11 @@ export default {
 
     // 设置面板（抽屉）
     const settingsDrawer = ref(false)
+    function bodyScroll(lock) {
+      lock 
+      ? document.getElementsByTagName("body")[0].className="ban-scroll"
+      : document.body.removeAttribute("class","ban-scroll")
+    }
 
     // 监听设置项的变化
     watch(()=>store.state.settings, (newValue, oldValue)=>{
@@ -231,7 +247,7 @@ export default {
       sideBarMenu,
       storedSize,
       closeShade, lastImage, nextImage, copy,
-      settingsDrawer,
+      settingsDrawer, bodyScroll,
       signOut,
     }
   }
