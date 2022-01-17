@@ -14,7 +14,7 @@
         <div class="daily-list">
           <el-space wrap :size="14">
             <yq-image v-for="(item, i) in dailyImgList[index]" :key="item.id" 
-              :deleted="false" :imageObj="item" :index="i" 
+              :deleted="false" :imageObj="item" :index="i"
               @lookBigImage="lookBigImage" @deleteByIndex="deleteByIndex"
             ></yq-image>
           </el-space>
@@ -24,9 +24,8 @@
     <template v-if="!$store.state.settings.showDateInList">
       <div class="daily-list">
         <el-space wrap :size="14">
-          <yq-image v-for="(item, i) in imageList" :key="item.id" 
-            :deleted="false" :imageObj="item" :index="i" 
-            @lookBigImage="lookBigImage" @deleteByIndex="deleteByIndex"
+          <yq-image v-for="item in imageList" :key="item.id" 
+            :deleted="false" :imageObj="item" @lookBigImage="lookBigImage" @deleteByIndex="deleteByIndex"
           ></yq-image>
         </el-space>
       </div>
@@ -95,20 +94,26 @@ export default {
       })
     }
     // 移除已删除的图像
-    function deleteByIndex(index) {
+    function deleteByIndex(id) {
       // 移除imageList中存储的图像
-      imageList.splice(index, 1)
+      for (let i=0; i<imageList.length; i++) {
+        if (id === imageList[i].id) {
+          imageList.splice(i, 1)
+          break
+        }
+      }
       // 移除dailyImgList中存储的图像
       for (let i=0; i<dailyImgList.length; i++) {
-        index -= dailyImgList[i].length
-        if (index < 0) {
-          dailyImgList[i].splice(index + dailyImgList[i].length, 1)
-          // 如果移除后这一天已经没有图像，则需移除这一天
-          if (dailyImgList[i].length === 0) {
-            dailyImgList.splice(i, 1)
-            dateList.splice(i, 1)
+        for (let j=0; j<dailyImgList[i].length; j++) {
+          if (id === dailyImgList[i][j].id) {
+            dailyImgList[i].splice(j, 1)
+            // 如果移除后这一天已经没有图像，则需移除这一天
+            if (dailyImgList[i].length === 0) {
+              dailyImgList.splice(i, 1)
+              dateList.splice(i, 1)
+            }
+            break
           }
-          break
         }
       }
     }
@@ -122,10 +127,20 @@ export default {
 
     // 全屏查看图片
     const store = useStore()
-    function lookBigImage(index) {
+    function lookBigImage(id) {
+      // 根据查看的图片id找出其在imageList中的下标
+      let index = 0
+      for (let i=0; i<imageList.length; i++) {
+        if (id === imageList[i].id) {
+          index = i
+          break
+        }
+      }
+      // 打开遮罩层，全屏展示图片
       store.commit('changeShade', true)
       store.commit('changeImageList', imageList)
       store.commit('changeImageListIndex', index)
+      // 禁止页面滚动
       document.getElementsByTagName("body")[0].className="ban-scroll"
     }
 

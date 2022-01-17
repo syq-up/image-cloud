@@ -13,7 +13,7 @@
         </el-tooltip>
       </div>
       <el-tooltip content="View" effect="light" placement="right">
-        <img @click="$emit('lookBigImage', index)" class="look hvr-grow" src="../assets/icon/image/look.svg">
+        <img @click="$emit('lookBigImage', imageObj.id)" class="look hvr-grow" src="../assets/icon/image/look.svg">
       </el-tooltip>
       <el-tooltip v-if="!deleted" content="Delete" effect="light" placement="left">
         <img @click="deleteById" class="delete hvr-grow" src="../assets/icon/image/delete.svg">
@@ -39,10 +39,6 @@ export default {
     },
     imageObj: {
       type: Object,
-      required: true,
-    },
-    index: {
-      type: Number,
       required: true,
     },
   },
@@ -72,16 +68,16 @@ export default {
     function deleteById() {
       server.get('/image/deleteImageById/'+props.imageObj.id).then(res=>{
         if (res.code === 200) {
+          emit('deleteByIndex', props.imageObj.id)
           ElMessage({message: 'The image is deleted successfully.', type: 'success',})
-          emit('deleteByIndex', props.index)
         }
       })
     }
     function restoreById() {
       server.get('/image/restoreImageById/'+props.imageObj.id).then(res=>{
         if (res.code === 200) {
+          emit('restoreByIndex', props.imageObj.id)
           ElMessage({message: 'The image is restored successfully.', type: 'success',})
-          emit('restoreByIndex', props.index)
         }
       })
     }

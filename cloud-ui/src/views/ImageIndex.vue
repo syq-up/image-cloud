@@ -114,8 +114,12 @@
         <div @click="closeShade" class="shade"></div>
         <img class="big-image" :src="$store.state.imageList[$store.state.imageListIndex].url">
         <div @click="closeShade" class="close-shade-btn hvr-grow"><img src="../assets/icon/image/close.svg"></div>
-        <div @click="lastImage" class="last-image-btn hvr-grow"><img src="../assets/icon/image/left.svg"></div>
-        <div @click="nextImage" class="next-image-btn hvr-grow"><img src="../assets/icon/image/right.svg"></div>
+        <div @click="lastImage" v-show="$store.state.imageListIndex !== 0" class="last-image-btn hvr-grow">
+          <img src="../assets/icon/image/left.svg">
+        </div>
+        <div @click="nextImage" v-show="$store.state.imageListIndex !== $store.state.imageList.length-1" class="next-image-btn hvr-grow">
+          <img src="../assets/icon/image/right.svg">
+        </div>
         <div class="copy-btn-group">
           <img @click="copy('url')" class="item hvr-grow" style="border-color: #1296db;" src="../assets/icon/image/copy_url.svg">
           <img @click="copy('html')" class="item hvr-grow" style="border-color: #e44d26;" src="../assets/icon/image/copy_html.svg">

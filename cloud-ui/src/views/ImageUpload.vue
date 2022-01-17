@@ -37,8 +37,8 @@
     </div>
     <div class="uploaded-list">
       <el-space wrap :size="14">
-        <yq-image v-for="(item, i) in upload.list" :key="item.id" 
-          :deleted="false" :imageObj="item" :index="i" @lookBigImage="lookBigImage"
+        <yq-image v-for="item in upload.list" :key="item.id" 
+          :deleted="false" :imageObj="item" @lookBigImage="lookBigImage" @deleteByIndex="deleteByIndex"
         ></yq-image>
       </el-space>
     </div>
@@ -184,19 +184,40 @@ export default {
         store.commit('pushSecondaryPathList', upload.secondaryPath.substring(1))
       }
     }
+
+    // 移除已删除的图像
+    function deleteByIndex(id) {
+      // 移除upload.list中存储的图像
+      for (let i=0; i<upload.list.length; i++) {
+        if (id === upload.list[i].id) {
+          upload.list.splice(i, 1)
+          break
+        }
+      }
+    }
     
     // 全屏查看图片
-    function lookBigImage(index) {
+    function lookBigImage(id) {
+      // 根据查看的图片id找出其在imageList中的下标
+      let index = 0
+      for (let i=0; i<upload.list.length; i++) {
+        if (id === upload.list[i].id) {
+          index = i
+          break
+        }
+      }
+      // 打开遮罩层，全屏展示图片
       store.commit('changeShade', true)
       store.commit('changeImageList', upload.list)
       store.commit('changeImageListIndex', index)
+      // 禁止页面滚动
       document.getElementsByTagName("body")[0].className="ban-scroll"
     }
 
     return {
       querySecondaryPath, checkSecondaryPath
       ,upload, beforeUpload, uploadOnSuccess, uploadOnError, uploadWebImage, getTotalSize
-      ,lookBigImage,
+      ,deleteByIndex, lookBigImage,
     };
   },
 };

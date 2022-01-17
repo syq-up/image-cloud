@@ -13,7 +13,7 @@
         <div class="daily-list">
           <el-space wrap :size="14">
             <yq-image v-for="(item, i) in dailyImgList[index]" :key="item.id" 
-              :deleted="true" :imageObj="item" :index="i" 
+              :deleted="true" :imageObj="item" :index="i"
               @lookBigImage="lookBigImage" @restoreByIndex="restoreByIndex"
             ></yq-image>
           </el-space>
@@ -23,9 +23,8 @@
     <template v-if="!$store.state.settings.showDateInRecycle">
       <div class="daily-list">
         <el-space wrap :size="14">
-          <yq-image v-for="(item, i) in imageList" :key="item.id" 
-            :deleted="false" :imageObj="item" :index="i" 
-            @lookBigImage="lookBigImage" @deleteByIndex="deleteByIndex"
+          <yq-image v-for="item in imageList" :key="item.id" 
+            :deleted="false" :imageObj="item" @lookBigImage="lookBigImage" @deleteByIndex="deleteByIndex"
           ></yq-image>
         </el-space>
       </div>
@@ -99,32 +98,49 @@ export default {
       })
     }
 		// 移除已恢复的图像
-		function restoreByIndex(index) {
+		function restoreByIndex(id) {
 			// 移除imageList中存储的图像
-      imageList.splice(index, 1)
+      for (let i=0; i<imageList.length; i++) {
+        if (id === imageList[i].id) {
+          imageList.splice(i, 1)
+          break
+        }
+      }
       // 移除dailyImgList中存储的图像
       for (let i=0; i<dailyImgList.length; i++) {
-        index -= dailyImgList[i].length
-        if (index < 0) {
-          dailyImgList[i].splice(index + dailyImgList[i].length, 1)
-          // 如果移除后这一天已经没有图像，则需移除这一天
-          if (dailyImgList[i].length === 0) {
-            dailyImgList.splice(i, 1)
-            dateList.splice(i, 1)
+        for (let j=0; j<dailyImgList[i].length; j++) {
+          if (id === dailyImgList[i][j].id) {
+            dailyImgList[i].splice(j, 1)
+            // 如果移除后这一天已经没有图像，则需移除这一天
+            if (dailyImgList[i].length === 0) {
+              dailyImgList.splice(i, 1)
+              dateList.splice(i, 1)
+            }
+            break
           }
-          break
         }
       }
 		}
 
     // 全屏查看图片
     const store = useStore();
-    function lookBigImage(index) {
-      store.commit('changeShade', true);
-      store.commit('changeImageList', imageList);
-      store.commit('changeImageListIndex', index);
-      document.getElementsByTagName("body")[0].className="ban-scroll";
+    function lookBigImage(id) {
+      // 根据查看的图片id找出其在imageList中的下标
+      let index = 0
+      for (let i=0; i<imageList.length; i++) {
+        if (id === imageList[i].id) {
+          index = i
+          break
+        }
+      }
+      // 打开遮罩层，全屏展示图片
+      store.commit('changeShade', true)
+      store.commit('changeImageList', imageList)
+      store.commit('changeImageListIndex', index)
+      // 禁止页面滚动
+      document.getElementsByTagName("body")[0].className="ban-scroll"
     }
+
     return { page, dateList, dailyImgList, imageList, loadImages, restoreByIndex, settings, lookBigImage };
   },
 };
