@@ -2,19 +2,26 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.shiyq.cloudsystem.mapper.ImageMapper">
 
-    <select id="getRecycleListByIdAndPageNum" resultType="com.shiyq.cloudsystem.entity.DO.Image">
+    <select id="getImageListByCondition" resultType="com.shiyq.cloudsystem.entity.DO.Image">
+        <bind name="offset" value="(pageNum-1)*pageSize"/>
         SELECT * FROM `image`
-        WHERE `deleted`=1 AND `user_id`=#{userId}
+        WHERE `user_id`=#{userId} AND `deleted`=#{deleted}
+        <if test="path != null">
+            AND `path`=#{path}
+        </if>
         ORDER BY `create_time` DESC
-        LIMIT #{limit} OFFSET #{offset}
+        LIMIT #{pageSize} OFFSET #{offset}
+    </select>
+
+    <select id="getTotalByCondition" resultType="long">
+        SELECT COUNT(*) FROM `image` WHERE `user_id` = #{userId} AND `deleted`=#{deleted}
+        <if test="path != null">
+            AND `path`=#{path}
+        </if>
     </select>
 
     <select id="getAllRecycleList" resultType="com.shiyq.cloudsystem.entity.DO.Image">
         SELECT * FROM `image` WHERE `deleted`=1
-    </select>
-
-    <select id="getTotalRecycle" resultType="long">
-        SELECT COUNT(*) FROM `image` WHERE `deleted` = 1 AND `user_id` = #{userId};
     </select>
 
     <update id="restoreById">

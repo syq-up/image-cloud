@@ -37,18 +37,12 @@ public interface ImageService extends IService<Image> {
     ImageVO uploadWebImage(UploadRequest uploadRequest) throws Exception;
 
     /**
-     * 查询【图像列表】 默认以时间倒序获取
-     * @param pageNum 页数
-     * @return 图像列表
+     * 查询图像列表
+     * @param path      条件之一，为null则忽略
+     * @param pageNum   条件之一，页数
+     * @param deleted   条件之一，查询（未）逻辑删除的记录（true是，false否）
      */
-    PageVO getImageList(long pageNum);
-
-    /**
-     * 查询【回收站列表】 默认以时间倒序获取
-     * @param pageNum 页数
-     * @return 回收站列表
-     */
-    PageVO getRecycleList(long pageNum);
+    PageVO getImageList(String path, int pageNum, boolean deleted);
 
     /**
      * 逻辑删除，自动填充更新时间字段

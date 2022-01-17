@@ -117,49 +117,24 @@ public class ImageServiceImpl extends ServiceImpl<ImageMapper, Image> implements
     }
 
     /**
-     * 查询【图像列表】 默认以时间倒序获取
-     * @param pageNum 页数
-     * @return 图像列表
+     * 查询图像列表
      */
     @Override
-    public PageVO getImageList(long pageNum) {
-        Page<Image> page = new Page<>(pageNum, 25);
-        // 排序-最新上传优先
-        QueryWrapper<Image> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("user_id", UserContext.getCurrentUserId());
-        queryWrapper.orderByDesc("id");
-        imageMapper.selectPage(page, queryWrapper);
-
-        // 添加图像url前缀
-        page.getRecords().forEach(image -> {
-            String imageUrl = imageUrlPrefix + String.format("%06d", UserContext.getCurrentUserId()) + "/"
-                    + image.getPath() + "/" + image.getFilename();
-            image.setPath(imageUrl);
-        });
-
-        return ImageConvert.INSTANCE.page2PageVO(page);
-    }
-
-    /**
-     * 查询【回收站列表】 默认以时间倒序获取
-     * @param pageNum 页数
-     * @return 回收站列表
-     */
-    @Override
-    public PageVO getRecycleList(long pageNum) {
+    public PageVO getImageList(String path, int pageNum, boolean deleted) {
+        // 默认页大小为 25
         PageVO pageVO = new PageVO(25, pageNum);
-        // 根据页数获取回收站列表
-        List<Image> recycleList =
-                imageMapper.getRecycleListByIdAndPageNum(UserContext.getCurrentUserId(), 25, (pageNum-1)*25);
+        // 查询图像列表
+        List<Image> imageList = imageMapper
+                .getImageListByCondition(UserContext.getCurrentUserId(), path, pageNum, 25, deleted?"1":"0");
         // 添加图像url前缀
-        recycleList.forEach(image -> {
+        imageList.forEach(image -> {
             String imageUrl = imageUrlPrefix + String.format("%06d", UserContext.getCurrentUserId()) + "/"
                     + image.getPath() + "/" + image.getFilename();
             image.setPath(imageUrl);
         });
-        pageVO.setRecords(ImageConvert.INSTANCE.ImageDOs2VOs(recycleList));
-        // 回收站记录总数（逻辑删除的记录总数）
-        pageVO.setTotal(imageMapper.getTotalRecycle(UserContext.getCurrentUserId()));
+        pageVO.setRecords(ImageConvert.INSTANCE.ImageDOs2VOs(imageList));
+        // 记录总数
+        pageVO.setTotal(imageMapper.getTotalByCondition(UserContext.getCurrentUserId(), path, deleted ? "1" : "0"));
         return pageVO;
     }
 

@@ -58,23 +58,11 @@ public class ImageController {
     }
 
     /**
-     * 查询【图像列表】 默认以时间倒序获取
-     * @param pageNum 页数
-     * @return 请求结果
+     * 查询图像列表
      */
-    @GetMapping("/getImageList/{pageNum}")
-    public XhrResult getImageListByPageNum(@PathVariable long pageNum) {
-        return XhrResult.success(imageService.getImageList(pageNum));
-    }
-
-    /**
-     * 查询【回收站列表】 默认以时间倒序获取
-     * @param pageNum 页数
-     * @return 请求结果
-     */
-    @GetMapping("/getRecycleList/{pageNum}")
-    public XhrResult getRecycleListByPageNum(@PathVariable long pageNum) {
-        return XhrResult.success(imageService.getRecycleList(pageNum));
+    @GetMapping("/getImageList")
+    public XhrResult getImageList(@RequestParam(required = false) String path, @RequestParam int pageNum) {
+        return XhrResult.success(imageService.getImageList(path, pageNum, false));
     }
 
     /**

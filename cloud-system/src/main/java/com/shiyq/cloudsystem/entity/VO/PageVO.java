@@ -8,10 +8,10 @@ import java.util.List;
  */
 @Data
 public class PageVO {
-    private List<ImageVO> records;
-    private long total;
-    private long size;
-    private long current;
+    private List<ImageVO> records;  // 当前页所有记录
+    private long total; // 总记录数
+    private long size;  // 页大小
+    private long current;   // 当前页数
 
     public PageVO() {
     }

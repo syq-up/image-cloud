@@ -67,7 +67,10 @@ export default {
     const dailyImgList = reactive([])
     const imageList = reactive([])
 		function loadImages() {
-      server.get('/image/getRecycleList/' + (++page.current)).then(res => {
+      const params = {
+				pageNum: ++page.current
+			}
+      server.get('/image/getRecycleList', {params}).then(res => {
         // records.length!==0：当前页非空页，可能存在下一页，对当前页图像数据进行下一步处理
         // records.length===0：当前页为空页，不存在下一页，置disabled=true，不再请求下一页
         if (res.data.records.length!==0) {
