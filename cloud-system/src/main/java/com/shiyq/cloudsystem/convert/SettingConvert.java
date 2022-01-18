@@ -19,6 +19,6 @@ public abstract class SettingConvert {
         setting.setUserId(UserContext.getCurrentUserId());
     }
 
-    // Setting --> SettingDTO
+    // Setting --> SettingVO
     public abstract SettingVO settingDO2VO(Setting setting);
 }

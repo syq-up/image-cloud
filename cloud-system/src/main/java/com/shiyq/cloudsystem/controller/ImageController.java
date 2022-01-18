@@ -66,6 +66,14 @@ public class ImageController {
     }
 
     /**
+     * 查询回收站图像列表
+     */
+    @GetMapping("/getRecycleList")
+    public XhrResult getRecycleList(@RequestParam(required = false) String path, @RequestParam int pageNum) {
+        return XhrResult.success(imageService.getImageList(path, pageNum, true));
+    }
+
+    /**
      * 【单张图像】【逻辑删除】
      * @param id id
      * @return 请求结果

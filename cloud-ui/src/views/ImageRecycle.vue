@@ -99,7 +99,7 @@ export default {
         if (res.data.records.length!==0) {
 					imageList.push(...res.data.records) // 将图像数据插入到imageList，以渲染UI
           // 非文件夹样式时，图像按时间分组显示
-          if (!store.state.settings.folderStyleInList) {
+          if (!store.state.settings.folderStyleInRecycle) {
             // 逐一对图像进行处理
             for (let img of res.data.records) {
               const len = dateList.length // dateList数组长度
@@ -152,9 +152,8 @@ export default {
       loadImages()
     }
 
-    
     // 监听文件夹样式的切换
-    watch(()=>store.state.settings.folderStyleInList, (newValue)=>{
+    watch(()=>store.state.settings.folderStyleInRecycle, (newValue)=>{
       // 置当前页为0
       page.currentPage = 0
       // 清空图像列表
