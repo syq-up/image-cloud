@@ -51,7 +51,7 @@
             :folderName="folder.name" @toNextPath="toNextPath"></yq-folder>
         </el-space>
       </div>
-      <el-divider></el-divider>
+      <el-divider content-position="left"><span style="color: #222; font-size: 16px; line-height: 18px; height: 18px;">images</span></el-divider>
       <div class="daily-list">
         <el-space wrap :size="14">
           <yq-image v-for="item in imageList" :key="item.id"
@@ -226,10 +226,11 @@ export default {
 					if (!obj) {
 						obj = { id: id++, name, children: [] }
 						levelList.push(obj)
+            // TODO 这里有bug！
 						// 7.若当前被增节点是叶子节点，则裁剪该节点子节点属性
-						if (name == pathItemList[pathItemList.length - 1]) {
-							delete obj.children
-						}
+						// if (name == pathItemList[pathItemList.length - 1]) {
+						// 	delete obj.children
+						// }
 					}
 					// 8.已有则进入下一层，继续寻找
 					levelList = obj.children

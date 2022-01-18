@@ -214,9 +214,9 @@ export default {
 						obj = { id: id++, name, children: [] }
 						levelList.push(obj)
 						// 7.若当前被增节点是叶子节点，则裁剪该节点子节点属性
-						if (name == pathItemList[pathItemList.length - 1]) {
-							delete obj.children
-						}
+						// if (name == pathItemList[pathItemList.length - 1]) {
+						// 	delete obj.children
+						// }
 					}
 					// 8.已有则进入下一层，继续寻找
 					levelList = obj.children
