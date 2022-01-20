@@ -97,7 +97,6 @@ export default {
     const dateList = reactive([])
     const dailyImgList = reactive([])
     const imageList = reactive([])
-    const secondaryPathTree = reactive(pathListToTree(store.state.userInfo.secondaryPathList))  // 次级路径列表（树结构）
     // 加载下一页图片
     function loadImages() {
       page.loading = true
@@ -135,11 +134,11 @@ export default {
           }
           // 文件样式时，得到当前路径下的子路径（文件夹）
           else {
-            let tempList = secondaryPathTree
+            let tempList = pathListToTree(store.state.userInfo.secondaryPathList)
             page.currentPath.forEach(currentPathItem => {
               for (let i=0; i<tempList.length; i++) {
                 if (tempList[i].name === currentPathItem) {
-                  tempList = tempList.children
+                  tempList = tempList[i].children
                   break
                 }
               }
@@ -161,12 +160,14 @@ export default {
       // 清空上一级路径的数据
       page.folderInCurrentPath.length = 0
       imageList.length = 0
+      // 解除禁用加载
+      page.disabled = false
       // 重新加载数据
       loadImages()
     }
 
     // 监听文件夹样式的切换
-    watch(()=>store.state.settings.folderStyleInList, (newValue)=>{
+    watch(()=>store.state.settings.folderStyleInList, ()=>{
       // 置当前页为0
       page.currentPage = 0
       // 清空图像列表
@@ -174,11 +175,8 @@ export default {
       dailyImgList.length = 0
       imageList.length = 0
       page.currentPath.length = 0
-      secondaryPathTree.length = 0
-      // 切换到文件夹样式时，将次级路径列表转化为数结构
-      if (newValue) {
-        secondaryPathTree.push(...pathListToTree(store.state.userInfo.secondaryPathList))
-      }
+      // 解除禁用加载
+      page.disabled = false
       // 执行loadImages方法，加载数据
       loadImages()
     })
@@ -268,6 +266,21 @@ export default {
 </script>
 
 <style scoped>
+.current-path span {
+  margin-right: 8px;
+  height: 18px;
+  font-size: 16px;
+  line-height: 18px;
+  color: #222;
+  cursor: pointer;
+}
+.current-path span:hover {
+  color: #409eff;
+}
+.current-path span::before {
+  content: '/';
+  margin-right: 8px;
+}
 .daily-list {
   margin: 0 0 0 1rem;
   display: -webkit-flex;

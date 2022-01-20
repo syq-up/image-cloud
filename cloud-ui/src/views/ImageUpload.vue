@@ -17,7 +17,7 @@
     <div class="file-preview">
       <el-upload class="file-drop-zone" name="file" :action="upload.action" :data="upload.data" :headers="upload.headers" :accept="upload.accept"
         drag multiple :show-file-list="false" :before-upload="beforeUpload" :on-success="uploadOnSuccess" :on-error="uploadOnError"
-        ><!-- :http-request="handleUpload" -->
+      >
         <div class="file-drop-zone-title">
           <img src="../assets/icon/left_menu/upload.svg">
           <div class="el-upload__text">
@@ -178,7 +178,7 @@ export default {
       else
         return `${(upload.totalSize / 1024 / 1024).toFixed(2)} MB`
     })
-    // 检查次级路径，把新创建的次级路径记录到数据库 TODO 这里应该在后端检查…
+    // 检查次级路径，把新创建的次级路径记录到store的用户信息
     function updateSecondaryPath() {
       if (upload.secondaryPath.length > 0 && !upload.secondaryPathList.some(obj=>obj.value===upload.secondaryPath)) {
         store.commit('pushSecondaryPathList', upload.secondaryPath.substring(1))
