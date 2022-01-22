@@ -33,6 +33,12 @@
         </el-space>
       </div>
     </template>
+    <div class="current-path" v-if="$store.state.settings.folderStyleInList">
+      <el-divider content-position="left">
+        <span @click="toPath(0)">root</span>
+        <span v-for="(pathItem, i) in page.currentPath" :key="'list-path-'+i" @click="toPath(i+1)">{{ pathItem }}</span>
+      </el-divider>
+    </div>
     <template v-if="$store.state.settings.folderStyleInList && !$store.state.settings.showDividerInList">
       <div class="daily-list">
         <el-space wrap :size="14">
@@ -166,6 +172,24 @@ export default {
       loadImages()
     }
 
+    // 点击路径导航进入指定路径（index为下标+1）
+    function toPath(index) {
+      // 点击了当前路径，不进行任何操作
+      if (index === page.currentPath.length) {
+        return
+      }
+      // 更新当前路径和当前页数
+      page.currentPath = page.currentPath.slice(0, index)
+      page.currentPage = 0
+      // 清空上一级路径的数据
+      page.folderInCurrentPath.length = 0
+      imageList.length = 0
+      // 解除禁用加载
+      page.disabled = false
+      // 重新加载数据
+      loadImages()
+    }
+
     // 监听文件夹样式的切换
     watch(()=>store.state.settings.folderStyleInList, ()=>{
       // 置当前页为0
@@ -260,7 +284,7 @@ export default {
       document.getElementsByTagName("body")[0].className="ban-scroll"
     }
 
-    return { page, dateList, dailyImgList, imageList, loadImages, toNextPath, deleteByIndex, settings, lookBigImage };
+    return { page, dateList, dailyImgList, imageList, loadImages, toNextPath, toPath, deleteByIndex, settings, lookBigImage };
   },
 };
 </script>
