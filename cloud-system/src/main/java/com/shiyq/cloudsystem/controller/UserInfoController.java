@@ -43,14 +43,9 @@ public class UserInfoController {
     }
 
     @PostMapping("/uploadAvatar")
-    public XhrResult uploadAvatar(MultipartFile avatarFile) {
-        XhrResult xhrResult;
-        try {
-            xhrResult = XhrResult.success();
-            xhrResult.put("avatarUrl", userInfoService.uploadUserAvatar(avatarFile));
-        } catch (IOException e) {
-            xhrResult = XhrResult.error("IO Exception!");
-        }
+    public XhrResult uploadAvatar(MultipartFile avatarFile) throws Exception {
+        XhrResult xhrResult = XhrResult.success();
+        xhrResult.put("avatarUrl", userInfoService.uploadUserAvatar(avatarFile));
         return xhrResult;
     }
 

@@ -35,12 +35,8 @@ public class ImageController {
      * @return 请求结果
      */
     @PostMapping("/upload")
-    public XhrResult upload(UploadRequest uploadRequest, @RequestParam("file") MultipartFile file) {
-        try {
-            return XhrResult.success(imageService.uploadImage(uploadRequest, file));
-        } catch (IOException e) {
-            return XhrResult.error(e.getMessage());
-        }
+    public XhrResult upload(UploadRequest uploadRequest, @RequestParam("file") MultipartFile file) throws Exception {
+        return XhrResult.success(imageService.uploadImage(uploadRequest, file));
     }
 
     /**
@@ -49,12 +45,8 @@ public class ImageController {
      * @return 请求结果
      */
     @PostMapping("/uploadWebImage")
-    public XhrResult uploadWebImage(@RequestBody UploadRequest uploadRequest) {
-        try {
-            return XhrResult.success(imageService.uploadWebImage(uploadRequest));
-        } catch (Exception e) {
-            return XhrResult.error(e.getMessage());
-        }
+    public XhrResult uploadWebImage(@RequestBody UploadRequest uploadRequest) throws Exception {
+        return XhrResult.success(imageService.uploadWebImage(uploadRequest));
     }
 
     /**
